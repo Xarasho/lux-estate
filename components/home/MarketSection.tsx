@@ -3,23 +3,24 @@
 import React from "react";
 import { Property } from "@/types/property";
 import { PropertyCard } from "./PropertyCard";
+import { Pagination } from "./Pagination";
 
 export interface MarketSectionProps {
   properties: Property[];
   selectedFilter: "all" | "sale" | "rent";
   onFilterChange: (filter: "all" | "sale" | "rent") => void;
-  onLoadMore?: () => void;
-  hasMore?: boolean;
-  isLoadingMore?: boolean;
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 export function MarketSection({
   properties,
   selectedFilter,
   onFilterChange,
-  onLoadMore,
-  hasMore = true,
-  isLoadingMore = false,
+  currentPage,
+  totalPages,
+  totalCount,
 }: MarketSectionProps) {
   return (
     <section>
@@ -30,7 +31,9 @@ export function MarketSection({
             New in Market
           </h2>
           <p className="text-nordic-muted mt-1 text-sm">
-            Fresh opportunities added this week.
+            {totalCount > 0
+              ? `${totalCount} propiedad${totalCount !== 1 ? "es" : ""} disponible${totalCount !== 1 ? "s" : ""}`
+              : "Fresh opportunities added this week."}
           </p>
         </div>
 
@@ -93,19 +96,8 @@ export function MarketSection({
         </div>
       )}
 
-      {/* Load More Button */}
-      {hasMore && properties.length > 0 && (
-        <div className="mt-12 text-center">
-          <button
-            type="button"
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-            className="px-8 py-3 bg-white border border-nordic-dark/10 hover:border-mosque hover:text-mosque text-nordic-dark font-medium rounded-lg transition-all hover:shadow-md cursor-pointer disabled:opacity-60"
-          >
-            {isLoadingMore ? "Loading..." : "Load more properties"}
-          </button>
-        </div>
-      )}
+      {/* Pagination */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </section>
   );
 }
