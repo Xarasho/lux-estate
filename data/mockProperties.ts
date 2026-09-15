@@ -175,6 +175,134 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
     badge: "FOR RENT",
     isFeatured: false,
   },
+  {
+    id: "villa-mirage-oasis",
+    title: "Villa Mirage Oasis",
+    price: 1450000,
+    type: "sale",
+    category: "villa",
+    location: {
+      address: "78 Palm Canyon Dr",
+      city: "Palm Springs",
+    },
+    features: {
+      beds: 4,
+      baths: 3.5,
+      sqm: 310,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Modern luxury desert villa with pool",
+    badge: "FOR SALE",
+    isFeatured: false,
+  },
+  {
+    id: "tribeca-glass-penthouse",
+    title: "Tribeca Sky Penthouse",
+    price: 7800,
+    pricePeriod: "month",
+    type: "rent",
+    category: "penthouse",
+    location: {
+      address: "182 Franklin St",
+      city: "New York",
+    },
+    features: {
+      beds: 3,
+      baths: 3,
+      sqm: 220,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Tribeca modern penthouse with city views",
+    badge: "FOR RENT",
+    isFeatured: false,
+  },
+  {
+    id: "zen-forest-residence",
+    title: "Zen Forest Residence",
+    price: 920000,
+    type: "sale",
+    category: "house",
+    location: {
+      address: "44 Timberline Way",
+      city: "Aspen",
+    },
+    features: {
+      beds: 3,
+      baths: 2.5,
+      sqm: 175,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Architectural wooden residence in alpine forest",
+    badge: "FOR SALE",
+    isFeatured: false,
+  },
+  {
+    id: "soho-artisan-loft",
+    title: "SoHo Artisan Loft",
+    price: 3950,
+    pricePeriod: "month",
+    type: "rent",
+    category: "apartment",
+    location: {
+      address: "104 Prince St",
+      city: "New York",
+    },
+    features: {
+      beds: 2,
+      baths: 2,
+      sqm: 130,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Spacious bright industrial chic loft",
+    badge: "FOR RENT",
+    isFeatured: false,
+  },
+  {
+    id: "monaco-harbor-residence",
+    title: "Riviera Waterfront Villa",
+    price: 2850000,
+    type: "sale",
+    category: "villa",
+    location: {
+      address: "22 Boulevard de Suisse",
+      city: "Monaco",
+    },
+    features: {
+      beds: 5,
+      baths: 5,
+      sqm: 450,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Mediterranean luxury villa with infinity pool",
+    badge: "FOR SALE",
+    isFeatured: false,
+  },
+  {
+    id: "scandinavian-nordic-haven",
+    title: "Nordic Minimalist House",
+    price: 690000,
+    type: "sale",
+    category: "house",
+    location: {
+      address: "15 Fjord View",
+      city: "Oslo",
+    },
+    features: {
+      beds: 3,
+      baths: 2,
+      sqm: 145,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Minimalist Scandinavian timber home",
+    badge: "FOR SALE",
+    isFeatured: false,
+  },
 ];
 
 export const ADDITIONAL_MARKET_PROPERTIES: Property[] = [
@@ -219,6 +347,92 @@ export const ADDITIONAL_MARKET_PROPERTIES: Property[] = [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
     imageAlt: "Coastal haven villa",
     badge: "FOR RENT",
+    isFeatured: false,
+  },
+  {
+    id: "brickell-bay-flat",
+    title: "Brickell Bay Luxury Flat",
+    price: 3400,
+    pricePeriod: "month",
+    type: "rent",
+    category: "apartment",
+    location: {
+      address: "1200 Brickell Ave",
+      city: "Miami",
+    },
+    features: {
+      beds: 2,
+      baths: 2,
+      sqm: 95,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Modern Miami apartment interior with floor-to-ceiling glass",
+    badge: "FOR RENT",
+    isFeatured: false,
+  },
+  {
+    id: "bel-air-contemporary-estate",
+    title: "Bel-Air Horizon Estate",
+    price: 4100000,
+    type: "sale",
+    category: "house",
+    location: {
+      address: "850 Bellagio Rd",
+      city: "Los Angeles",
+    },
+    features: {
+      beds: 5,
+      baths: 6,
+      sqm: 520,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Modern Bel-Air architectural mansion",
+    badge: "FOR SALE",
+    isFeatured: false,
+  },
+  {
+    id: "olympic-village-penthouse",
+    title: "Harbour Panorama Penthouse",
+    price: 5800,
+    pricePeriod: "month",
+    type: "rent",
+    category: "penthouse",
+    location: {
+      address: "88 Pacific Blvd",
+      city: "Vancouver",
+    },
+    features: {
+      beds: 3,
+      baths: 3.5,
+      sqm: 210,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Modern penthouse terrace with skyline vista",
+    badge: "FOR RENT",
+    isFeatured: false,
+  },
+  {
+    id: "kyoto-modern-machi",
+    title: "Kyoto Zen Townhouse",
+    price: 740000,
+    type: "sale",
+    category: "house",
+    location: {
+      address: "27 Gion Garden Path",
+      city: "Kyoto",
+    },
+    features: {
+      beds: 2,
+      baths: 2,
+      sqm: 110,
+    },
+    imageUrl:
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Warm wood modern architectural home interior",
+    badge: "FOR SALE",
     isFeatured: false,
   },
 ];
