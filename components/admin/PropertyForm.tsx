@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Property, PropertyImage } from "@/types/property";
 import { createProperty, updateProperty, uploadPropertyImage } from "@/lib/properties";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { AdminPropertyMapClient } from "./AdminPropertyMapClient";
 
 interface PropertyFormProps {
   initialProperty?: Property | null;
@@ -1148,31 +1149,73 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
                   </p>
                 </div>
 
-                {/* Map Preview */}
-                <div className="relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 border border-gray-200 group">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS55FY7gfArnlTpNsdabJk9nBO5uQJgOwIsl8beO34JRZ9dMmjLoIkTuTUO72Y9L5tUmQqTReQWebUWadAWwLusGmRQiIict5sqY--yRaOxuYpTzfR4vv4RKh1ex6oxY64e0kbSeMudNO6pv-gG0WzVWs-pDfvQm5IoTQ1mT-tAV49LDkXAHZl317M1-D7eZw3N8o2ExKWTgg6oMAXOFVnkApIqnb7TZHekwSw8pWQxpJV2EKI8EQKQbQXJaSbjN8gB1n8b-ueWj8"
-                    alt="Map view of city streets"
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-3 text-center">
-                    <span className="bg-white/95 text-nordic px-3 py-1.5 rounded-lg shadow-sm backdrop-blur-sm text-xs font-bold font-sf-pro flex items-center gap-1.5 mb-1.5">
-                      <span className="material-icons text-sm text-mosque">place</span>
-                      <span>{city ? `${city}${address ? `, ${address}` : ""}` : "Previsualización del Mapa"}</span>
-                    </span>
-                    {lat !== "" && lng !== "" ? (
-                      <span className="bg-nordic/90 text-white px-2.5 py-0.5 rounded-md shadow-xs text-[11px] font-mono tracking-tight flex items-center gap-1">
-                        <span className="material-icons text-[11px] text-emerald-400">gps_fixed</span>
-                        <span>{Number(lat).toFixed(4)}, {Number(lng).toFixed(4)}</span>
-                      </span>
-                    ) : (
-                      <span className="bg-black/50 text-white/90 px-2 py-0.5 rounded text-[10px] font-sf-pro">
-                        Sin coordenadas GPS asignadas
-                      </span>
-                    )}
-                  </div>
-                </div>
+                {/* Leaflet Map Preview when coordinates are available */}
+                {(() => {
+                  const numLat = typeof lat === "number" ? lat : parseFloat(String(lat));
+                  const numLng = typeof lng === "number" ? lng : parseFloat(String(lng));
+                  const hasCoordinates =
+                    lat !== "" &&
+                    lng !== "" &&
+                    !isNaN(numLat) &&
+                    !isNaN(numLng) &&
+                    numLat >= -90 &&
+                    numLat <= 90 &&
+                    numLng >= -180 &&
+                    numLng <= 180;
+
+                  if (hasCoordinates) {
+                    return (
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-semibold uppercase tracking-wider text-nordic/80 font-sf-pro flex items-center gap-1.5">
+                            <span className="material-icons text-sm text-mosque">map</span>
+                            <span>Mapa Interactivo (Leaflet)</span>
+                          </label>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-mono text-mosque bg-hint-green/30 px-2 py-0.5 rounded font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>GPS Activo</span>
+                          </span>
+                        </div>
+
+                        <AdminPropertyMapClient
+                          lat={numLat}
+                          lng={numLng}
+                          title={title || "Nueva Propiedad"}
+                          address={address ? `${address}${city ? `, ${city}` : ""}` : city}
+                          onLocationChange={(newLat, newLng) => {
+                            setLat(newLat);
+                            setLng(newLng);
+                          }}
+                        />
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="relative rounded-xl border-2 border-dashed border-gray-200 bg-gradient-to-b from-gray-50/80 to-hint-green/10 p-5 text-center transition-all hover:border-mosque/40">
+                      <div className="w-12 h-12 mx-auto rounded-full bg-hint-green/50 text-mosque flex items-center justify-center mb-2.5 shadow-xs">
+                        <span className="material-icons text-2xl">pin_drop</span>
+                      </div>
+                      <h3 className="text-sm font-bold text-nordic font-sf-pro mb-1">
+                        Mapa Leaflet Pendiente
+                      </h3>
+                      <p className="text-xs text-gray-500 font-sf-pro max-w-xs mx-auto mb-3.5 leading-relaxed">
+                        Ingresa la latitud y longitud en los campos superiores o pulsa &quot;Detectar GPS&quot; para visualizar la propiedad en el mapa interactivo.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleDetectCoordinates}
+                        disabled={isLocating}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-mosque hover:bg-nordic px-3.5 py-1.5 rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-60"
+                      >
+                        <span className={`material-icons text-sm ${isLocating ? "animate-spin" : ""}`}>
+                          {isLocating ? "refresh" : "my_location"}
+                        </span>
+                        <span>{isLocating ? "Detectando GPS..." : "Detectar Coordenadas GPS"}</span>
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 
