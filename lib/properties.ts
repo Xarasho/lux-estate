@@ -98,6 +98,12 @@ export interface GetPropertiesParams {
   type?: "all" | "sale" | "rent";
   category?: string;
   search?: string;
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  beds?: number;
+  baths?: number;
+  amenities?: string[];
   featuredOnly?: boolean;
 }
 
@@ -113,6 +119,12 @@ export async function getProperties({
   type = "all",
   category = "all",
   search = "",
+  location = "",
+  minPrice,
+  maxPrice,
+  beds,
+  baths,
+  amenities,
   featuredOnly = false,
 }: GetPropertiesParams = {}): Promise<GetPropertiesResult> {
   const from = (page - 1) * pageSize;
@@ -133,14 +145,43 @@ export async function getProperties({
     query = query.eq("type", type);
   }
 
-  if (category && category !== "all") {
-    query = query.eq("category", category);
+  // Handle category mapping (e.g. condo -> apartment, townhouse -> house)
+  if (category && category !== "all" && category.toLowerCase() !== "any type") {
+    const normalizedCategory =
+      category.toLowerCase() === "condo"
+        ? "apartment"
+        : category.toLowerCase() === "townhouse"
+        ? "house"
+        : category.toLowerCase();
+    query = query.eq("category", normalizedCategory);
   }
 
-  if (search) {
+  const effectiveSearch = search || location;
+  if (effectiveSearch && effectiveSearch.trim()) {
+    const term = effectiveSearch.trim();
     query = query.or(
-      `title.ilike.%${search}%,location->>city.ilike.%${search}%,location->>address.ilike.%${search}%`
+      `title.ilike.%${term}%,location->>city.ilike.%${term}%,location->>address.ilike.%${term}%,location->>state.ilike.%${term}%,location->>country.ilike.%${term}%`
     );
+  }
+
+  if (minPrice !== undefined && minPrice > 0) {
+    query = query.gte("price", minPrice);
+  }
+
+  if (maxPrice !== undefined && maxPrice > 0) {
+    query = query.lte("price", maxPrice);
+  }
+
+  if (beds !== undefined && beds > 0) {
+    query = query.filter("features->beds", "gte", beds);
+  }
+
+  if (baths !== undefined && baths > 0) {
+    query = query.filter("features->baths", "gte", baths);
+  }
+
+  if (amenities && amenities.length > 0) {
+    query = query.contains("amenities", JSON.stringify(amenities));
   }
 
   if (!featuredOnly) {
@@ -151,8 +192,57 @@ export async function getProperties({
 
   if (error) {
     console.error("[getProperties] Supabase error:", error.message);
-    const mockList = featuredOnly ? FEATURED_PROPERTIES : INITIAL_MARKET_PROPERTIES;
-    return { data: mockList, count: mockList.length, totalPages: 1 };
+    let mockList = featuredOnly ? FEATURED_PROPERTIES : INITIAL_MARKET_PROPERTIES;
+    if (type && type !== "all") {
+      mockList = mockList.filter((p) => p.type === type);
+    }
+    if (category && category !== "all" && category.toLowerCase() !== "any type") {
+      const normalizedCategory =
+        category.toLowerCase() === "condo"
+          ? "apartment"
+          : category.toLowerCase() === "townhouse"
+          ? "house"
+          : category.toLowerCase();
+      mockList = mockList.filter((p) => p.category === normalizedCategory);
+    }
+    if (effectiveSearch && effectiveSearch.trim()) {
+      const st = effectiveSearch.trim().toLowerCase();
+      mockList = mockList.filter(
+        (p) =>
+          p.title.toLowerCase().includes(st) ||
+          p.location.city.toLowerCase().includes(st) ||
+          p.location.address.toLowerCase().includes(st) ||
+          (p.location.state && p.location.state.toLowerCase().includes(st)) ||
+          (p.location.country && p.location.country.toLowerCase().includes(st))
+      );
+    }
+    if (minPrice !== undefined && minPrice > 0) {
+      mockList = mockList.filter((p) => p.price >= minPrice);
+    }
+    if (maxPrice !== undefined && maxPrice > 0) {
+      mockList = mockList.filter((p) => p.price <= maxPrice);
+    }
+    if (beds !== undefined && beds > 0) {
+      mockList = mockList.filter((p) => p.features.beds >= beds);
+    }
+    if (baths !== undefined && baths > 0) {
+      mockList = mockList.filter((p) => p.features.baths >= baths);
+    }
+    if (amenities && amenities.length > 0) {
+      mockList = mockList.filter((p) =>
+        amenities.every((a) => p.amenities?.includes(a))
+      );
+    }
+
+    const total = mockList.length;
+    const paginated = featuredOnly
+      ? mockList
+      : mockList.slice(from, to + 1);
+    return {
+      data: paginated,
+      count: total,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   const properties = (data as DbProperty[]).map(toProperty);

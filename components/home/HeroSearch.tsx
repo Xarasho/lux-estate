@@ -9,6 +9,7 @@ export interface HeroSearchProps {
   selectedCategory?: string;
   onSelectCategory?: (category: string) => void;
   onToggleFilters?: () => void;
+  activeFiltersCount?: number;
 }
 
 const CATEGORIES: { label: string; value: string }[] = [
@@ -26,8 +27,14 @@ export function HeroSearch({
   selectedCategory = "all",
   onSelectCategory,
   onToggleFilters,
+  activeFiltersCount = 0,
 }: HeroSearchProps) {
   const [internalQuery, setInternalQuery] = useState(searchQuery);
+
+  // Keep internal input in sync if searchQuery changes externally (e.g. modal or reset)
+  React.useEffect(() => {
+    setInternalQuery(searchQuery);
+  }, [searchQuery]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -107,9 +114,18 @@ export function HeroSearch({
           <button
             type="button"
             onClick={onToggleFilters}
-            className="whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 transition-colors"
+            className={`whitespace-nowrap flex items-center gap-1.5 px-4 py-2 rounded-full font-medium text-sm transition-colors cursor-pointer ${
+              activeFiltersCount > 0
+                ? "bg-[#006611]/10 text-[#006611] border border-[#006611]/30 font-semibold"
+                : "text-nordic-dark hover:bg-black/5"
+            }`}
           >
             <span className="material-icons text-base">tune</span> Filters
+            {activeFiltersCount > 0 && (
+              <span className="w-5 h-5 flex items-center justify-center text-xs bg-[#006611] text-white rounded-full font-bold">
+                {activeFiltersCount}
+              </span>
+            )}
           </button>
         </div>
       </div>

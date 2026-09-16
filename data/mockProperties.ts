@@ -1212,4 +1212,1252 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       "photoUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuD4TxUmdQRb2VMjuaNxLEwLorv_dgHzoET2_wL5toSvew6nhtziaR3DX-U69DBN7J74yO6oKokpw8tqEFutJf13MeXghCy7FwZuAxnoJel6FYcKeCRUVinpZtrNnkZvXd-MY5_2MAtRD7JP5BieHixfCaeAPW04jm-y-nvF3HIrwcZ_HRDk_MrNP5WiPV3u9zNrEgM-SQoWGh4xLVSV444aZAbVl03mjjsW5WBpIeodCyqJxprTDp6Q157D06VxcdUSCf-l9UKQT-w"
     }
   }
+,
+{
+  "id": "aspen-mountain-chalet",
+  "slug": "aspen-mountain-chalet",
+  "title": "Aspen Ridge Chalet",
+  "price": 7850000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "410 Red Mountain Rd",
+    "city": "Aspen",
+    "state": "Colorado",
+    "country": "USA",
+    "lat": 39.1911,
+    "lng": -106.8175
+  },
+  "features": {
+    "beds": 5,
+    "baths": 6,
+    "sqm": 620,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Aspen Ridge Chalet Exterior",
+      "label": "Main Exterior"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Grand Great Room with Cathedral Timber Ceilings",
+      "label": "Great Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Gourmet Stone Chef's Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Mountain View Spa Bath",
+      "label": "Primary Bath"
+    }
+  ],
+  "badge": "EXCLUSIVE",
+  "isFeatured": false,
+  "description": "Perched on prestigious Red Mountain, this striking architectural sanctuary frames panoramic vistas of Aspen Mountain and the Roaring Fork Valley. Designed with indigenous stone, Douglas fir timbers, and floor-to-ceiling glass.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Marcus Vance",
+    "role": "Aspen Luxury Director",
+    "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (970) 555-0192",
+    "email": "marcus.vance@luxeestate.com"
+  }
+},
+{
+  "id": "malibu-oceanfront-villa",
+  "slug": "malibu-oceanfront-villa",
+  "title": "Malibu Pacifica Sanctuary",
+  "price": 14200000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "24800 Pacific Coast Hwy",
+    "city": "Malibu",
+    "state": "California",
+    "country": "USA",
+    "lat": 34.0259,
+    "lng": -118.7798
+  },
+  "features": {
+    "beds": 6,
+    "baths": 7,
+    "sqm": 850,
+    "garage": 4
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Malibu Pacifica Sanctuary Pool Deck",
+      "label": "Oceanfront Deck"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Open-Concept Sunset Living Room",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Bespoke Poliform Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Ocean View Primary Suite",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "JUST LISTED",
+  "isFeatured": false,
+  "description": "A masterpiece of organic minimalism on the bluffs of Malibu. Private steps lead directly to pristine white sand, while zero-edge reflection pools blend seamlessly with the Pacific horizon.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Elena Rostova",
+    "role": "West Coast Principal",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (310) 555-8821",
+    "email": "elena.rostova@luxeestate.com"
+  }
+},
+{
+  "id": "tribeca-cast-iron-loft",
+  "slug": "tribeca-cast-iron-loft",
+  "title": "Tribeca Cast-Iron Residence",
+  "price": 4650000,
+  "type": "sale",
+  "category": "apartment",
+  "location": {
+    "address": "68 Franklin St",
+    "city": "New York",
+    "state": "New York",
+    "country": "USA",
+    "lat": 40.7183,
+    "lng": -74.0048
+  },
+  "features": {
+    "beds": 3,
+    "baths": 3,
+    "sqm": 280,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Tribeca Loft Grand Gallery",
+      "label": "Gallery Living"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Architectural Library & Dining",
+      "label": "Dining Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Custom Calacatta Marble Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Tranquil Bedroom Suite",
+      "label": "Primary Bedroom"
+    }
+  ],
+  "badge": "NEW ARRIVAL",
+  "isFeatured": false,
+  "description": "Spanning a full floor in an iconic 1890s cast-iron building, this corner loft boasts 14 original wood columns, oversized south-facing casement windows, and museum-quality finishes throughout.",
+  "amenities": [
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "David Sterling",
+    "role": "Manhattan Portfolio Partner",
+    "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (212) 555-4309",
+    "email": "david.sterling@luxeestate.com"
+  }
+},
+{
+  "id": "palm-jumeirah-estate",
+  "slug": "palm-jumeirah-estate",
+  "title": "Palm Jumeirah Crown Villa",
+  "price": 18500000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "Frond N, Palm Jumeirah",
+    "city": "Dubai",
+    "state": "Dubai",
+    "country": "UAE",
+    "lat": 25.1124,
+    "lng": 55.139
+  },
+  "features": {
+    "beds": 7,
+    "baths": 8,
+    "sqm": 1200,
+    "garage": 4
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Palm Jumeirah Crown Villa Waterfront",
+      "label": "Private Beach & Pool"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Soaring Foyer and Royal Salon",
+      "label": "Double-Height Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Italian Minimalist Kitchen",
+      "label": "Chef Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Presidential Bedroom Suite",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "TROPHY ASSET",
+  "isFeatured": false,
+  "description": "An epitome of Middle Eastern opulent modernism situated on a coveted Palm tip. Featuring private yacht mooring, private infinity pool, cinema room, and unobstructed skyline vistas of Dubai Marina.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Tariq Al-Mansoor",
+    "role": "Middle East Managing Director",
+    "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+    "phone": "+971 4 555 7799",
+    "email": "tariq.mansoor@luxeestate.com"
+  }
+},
+{
+  "id": "mayfair-heritage-flat",
+  "slug": "mayfair-heritage-flat",
+  "title": "Mayfair Georgian Penthouse",
+  "price": 11500,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "penthouse",
+  "location": {
+    "address": "14 Grosvenor Square",
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom",
+    "lat": 51.5113,
+    "lng": -0.1508
+  },
+  "features": {
+    "beds": 3,
+    "baths": 3.5,
+    "sqm": 310,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Mayfair Georgian Penthouse Terrace",
+      "label": "Roof Terrace"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Heritage Drawing Room with Fireplace",
+      "label": "Drawing Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Contemporary English Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Stately Bedroom Suite",
+      "label": "Master Bedroom"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "Impeccably appointed Georgian penthouse overlooking historic Grosvenor Square. Includes private lift access, 24-hour concierge, bespoke joinery, and private manicured rooftop terrace.",
+  "amenities": [
+    "Gym",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Victoria Chesterfield",
+    "role": "London Prime Partner",
+    "photoUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+    "phone": "+44 20 7946 0912",
+    "email": "victoria.c@luxeestate.com"
+  }
+},
+{
+  "id": "roppongi-sky-residence",
+  "slug": "roppongi-sky-residence",
+  "title": "Roppongi Hills Panorama Suite",
+  "price": 6800,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "apartment",
+  "location": {
+    "address": "6-10 Roppongi",
+    "city": "Tokyo",
+    "state": "Tokyo",
+    "country": "Japan",
+    "lat": 35.6628,
+    "lng": 139.7314
+  },
+  "features": {
+    "beds": 2,
+    "baths": 2,
+    "sqm": 145,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Roppongi Skyline View from Living Room",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Minimalist Japanese Dining Area",
+      "label": "Dining"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Sleek Stainless Steel Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Master Suite with Hinoki Cypress Accents",
+      "label": "Primary Suite"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "Perched high above Roppongi, this luminous residence blends Japanese serenity with cosmopolitan refinement. Direct tower views, five-star hotel amenities, and valet service.",
+  "amenities": [
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Kenji Takahashi",
+    "role": "Tokyo Metro Specialist",
+    "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+    "phone": "+81 3 5555 8820",
+    "email": "kenji.t@luxeestate.com"
+  }
+},
+{
+  "id": "tahoe-pine-retreat",
+  "slug": "tahoe-pine-retreat",
+  "title": "Lake Tahoe Modern Waterfront",
+  "price": 5400000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "890 Lakeshore Blvd",
+    "city": "Incline Village",
+    "state": "Nevada",
+    "country": "USA",
+    "lat": 39.2494,
+    "lng": -119.9577
+  },
+  "features": {
+    "beds": 4,
+    "baths": 4.5,
+    "sqm": 480,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Lake Tahoe Waterfront Exterior",
+      "label": "Lakefront Pier"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Vaulted Great Room with Granite Hearth",
+      "label": "Great Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Open Concept Mountain Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Lake View Soaking Tub",
+      "label": "Master Bath"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "A harmonious blend of cedar, steel, and stone positioned directly on crystal-clear Lake Tahoe waters. Complete with a private deep-water pier, two buoys, and heated exterior terraces.",
+  "amenities": [
+    "Swimming Pool",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar"
+  ],
+  "agent": {
+    "name": "Marcus Vance",
+    "role": "Alpine & Waterfront Director",
+    "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (775) 555-0321",
+    "email": "marcus.vance@luxeestate.com"
+  }
+},
+{
+  "id": "star-island-manor",
+  "slug": "star-island-manor",
+  "title": "Star Island Bayfront Haven",
+  "price": 16900000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "28 Star Island Dr",
+    "city": "Miami",
+    "state": "Florida",
+    "country": "USA",
+    "lat": 25.7781,
+    "lng": -80.1503
+  },
+  "features": {
+    "beds": 6,
+    "baths": 7,
+    "sqm": 980,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Star Island Bayfront Pool & Facade",
+      "label": "Bayfront Pool"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Indoor-Outdoor Waterfront Living Room",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Boffi Italian Chef Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Primary Suite with Biscayne Bay Views",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "EXCLUSIVE",
+  "isFeatured": false,
+  "description": "Gated on world-renowned Star Island, this architectural trophy features 120 feet of deep-water dockage, lush royal palms, a private tennis court, and an expansive resort-style heated lap pool.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Sofia Carrera",
+    "role": "Miami Waterfront Advisor",
+    "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (305) 555-9102",
+    "email": "sofia.carrera@luxeestate.com"
+  }
+},
+{
+  "id": "cannes-riviera-villa",
+  "slug": "cannes-riviera-villa",
+  "title": "Cannes Azure Horizon Villa",
+  "price": 9200000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "Boulevard de la Croisette",
+    "city": "Cannes",
+    "state": "Provence-Alpes-Côte d'Azur",
+    "country": "France",
+    "lat": 43.5528,
+    "lng": 7.0174
+  },
+  "features": {
+    "beds": 5,
+    "baths": 5.5,
+    "sqm": 700,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Cannes Azure Horizon Pool & Terrace",
+      "label": "Sea Terrace"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Mediterranean Sunlit Salon",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Gourmet French Country Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Master Suite with Lérins Islands Views",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "Set against the backdrop of the Mediterranean, this Belle Époque inspired contemporary estate offers private olive groves, an infinity pool reflecting the French Riviera sky, and guest quarters.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar"
+  ],
+  "agent": {
+    "name": "Jean-Luc Moreau",
+    "role": "Côte d'Azur Managing Broker",
+    "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+    "phone": "+33 4 93 39 00 11",
+    "email": "jeanluc.m@luxeestate.com"
+  }
+},
+{
+  "id": "sydney-double-bay-haven",
+  "slug": "sydney-double-bay-haven",
+  "title": "Double Bay Harbour Villa",
+  "price": 8900000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "42 Ocean Ave",
+    "city": "Sydney",
+    "state": "New South Wales",
+    "country": "Australia",
+    "lat": -33.8767,
+    "lng": 151.2435
+  },
+  "features": {
+    "beds": 4,
+    "baths": 4,
+    "sqm": 510,
+    "garage": 2
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Double Bay Villa Facade",
+      "label": "Courtyard & Pool"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Sydney Harbour Sunlit Living Space",
+      "label": "Living Space"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Designer Terrazzo Kitchen Island",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Freestanding Bath overlooking garden",
+      "label": "Ensuite"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "Located in the heart of coveted Double Bay, moments from boutique retail and the marina. Designed by celebrated Australian architects with seamless indoor-outdoor alfresco courtyards.",
+  "amenities": [
+    "Swimming Pool",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Liam O'Connor",
+    "role": "Sydney Prestige Advisor",
+    "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+    "phone": "+61 2 9328 1100",
+    "email": "liam.oconnor@luxeestate.com"
+  }
+},
+{
+  "id": "paris-marais-atelier",
+  "slug": "paris-marais-atelier",
+  "title": "Le Marais Designer Duplex",
+  "price": 5400,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "apartment",
+  "location": {
+    "address": "18 Rue des Francs-Bourgeois",
+    "city": "Paris",
+    "state": "Île-de-France",
+    "country": "France",
+    "lat": 48.8575,
+    "lng": 2.3622
+  },
+  "features": {
+    "beds": 2,
+    "baths": 2,
+    "sqm": 130,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Parisian High-Ceiling Salon",
+      "label": "Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Mezzanine Library overlooking living",
+      "label": "Library"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Sleek Black Lacquer Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Attic Master Bedroom with Skylight",
+      "label": "Bedroom"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "A sophisticated Parisian pied-à-terre in an 18th-century hôtel particulier. Original Point de Hongrie oak parquetry, marble chimneys, soundproofed custom steel glass doors, and a private terrace.",
+  "amenities": [
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Claire Delacroix",
+    "role": "Paris Prime Representative",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "phone": "+33 1 42 68 55 00",
+    "email": "claire.d@luxeestate.com"
+  }
+},
+{
+  "id": "austin-lake-modern",
+  "slug": "austin-lake-modern",
+  "title": "Lake Austin Cantilever Estate",
+  "price": 3950000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "3100 Westlake Dr",
+    "city": "Austin",
+    "state": "Texas",
+    "country": "USA",
+    "lat": 30.3015,
+    "lng": -97.795
+  },
+  "features": {
+    "beds": 4,
+    "baths": 4,
+    "sqm": 420,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Lake Austin Cantilever Facade",
+      "label": "Exterior"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Cantilever Living Pavilion",
+      "label": "Living Pavilion"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Walnut & Quartz Island Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Minimalist Master Bath with Outdoor Shower",
+      "label": "Master Bath"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "A stunning architectural statement in Westlake Hills. Featuring soaring steel overhangs, an integrated negative-edge pool, dedicated two-slip boat dock access, and native Texas limestone accents.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Marcus Vance",
+    "role": "Luxury Estates Director",
+    "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (512) 555-8833",
+    "email": "marcus.vance@luxeestate.com"
+  }
+},
+{
+  "id": "scottsdale-desert-oasis",
+  "slug": "scottsdale-desert-oasis",
+  "title": "Scottsdale Desert Sanctuary",
+  "price": 2850000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "10500 E Pinnacle Peak Rd",
+    "city": "Scottsdale",
+    "state": "Arizona",
+    "country": "USA",
+    "lat": 33.6983,
+    "lng": -111.8544
+  },
+  "features": {
+    "beds": 4,
+    "baths": 3.5,
+    "sqm": 390,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Scottsdale Desert Pool at Sunset",
+      "label": "Pool & Saguaro Sunset"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Desert Modern Great Room",
+      "label": "Great Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Chef's Kitchen with Waterfall Island",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Master Bedroom Opening to Firepit Patio",
+      "label": "Master Bedroom"
+    }
+  ],
+  "badge": "JUST LISTED",
+  "isFeatured": false,
+  "description": "Tucked against Troon Mountain, this desert haven captures Sonoran sunsets with floor-to-ceiling motorized pocket doors, outdoor kitchen, fire features, and zero-edge Baja shelf pool.",
+  "amenities": [
+    "Swimming Pool",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Elena Rostova",
+    "role": "Desert & Coast Partner",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (480) 555-2244",
+    "email": "elena.rostova@luxeestate.com"
+  }
+},
+{
+  "id": "zurich-goldcoast-residence",
+  "slug": "zurich-goldcoast-residence",
+  "title": "Zurich Seeufer Penthouse",
+  "price": 13200,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "penthouse",
+  "location": {
+    "address": "Seestrasse 140",
+    "city": "Zurich",
+    "state": "Zurich",
+    "country": "Switzerland",
+    "lat": 47.3392,
+    "lng": 8.5417
+  },
+  "features": {
+    "beds": 3,
+    "baths": 3,
+    "sqm": 260,
+    "garage": 2
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Lake Zurich Penthouse Balcony",
+      "label": "Lakefront Balcony"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Minimalist Alpine Living Area",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Swiss Bulthaup Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Master Suite with Lake & Alpine View",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "Commanding uninterrupted perspectives across Lake Zurich to the snow-capped Glarus Alps, this bespoke penthouse features heated limestone flooring, private boat mooring privileges, and smart-climate automation.",
+  "amenities": [
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Jean-Luc Moreau",
+    "role": "Central European Advisor",
+    "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+    "phone": "+41 44 215 8800",
+    "email": "jeanluc.m@luxeestate.com"
+  }
+},
+{
+  "id": "honolulu-diamond-head-villa",
+  "slug": "honolulu-diamond-head-villa",
+  "title": "Diamond Head Oceanfront Villa",
+  "price": 11500000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "3800 Diamond Head Rd",
+    "city": "Honolulu",
+    "state": "Hawaii",
+    "country": "USA",
+    "lat": 21.2587,
+    "lng": -157.8087
+  },
+  "features": {
+    "beds": 5,
+    "baths": 6,
+    "sqm": 720,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Diamond Head Villa Infinity Pool",
+      "label": "Infinity Edge Pool"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Open Lanai Living Room",
+      "label": "Lanai Living"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Koa Wood Island Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Ocean Breeze Master Retreat",
+      "label": "Primary Suite"
+    }
+  ],
+  "badge": "EXCLUSIVE",
+  "isFeatured": false,
+  "description": "Directly beneath the majestic slopes of Diamond Head, this private oceanfront sanctuary enjoys immediate access to famous surf breaks, outdoor lava rock showers, expansive ironwood lanais, and saltwater pool.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Sofia Carrera",
+    "role": "Island & Waterfront Specialist",
+    "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (808) 555-7033",
+    "email": "sofia.carrera@luxeestate.com"
+  }
+},
+{
+  "id": "west-vancouver-cliffside",
+  "slug": "west-vancouver-cliffside",
+  "title": "West Vancouver Cliffside Glasshouse",
+  "price": 6900000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "5300 Marine Dr",
+    "city": "Vancouver",
+    "state": "British Columbia",
+    "country": "Canada",
+    "lat": 49.3486,
+    "lng": -123.2558
+  },
+  "features": {
+    "beds": 5,
+    "baths": 5,
+    "sqm": 550,
+    "garage": 2
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+      "alt": "West Vancouver Glasshouse Cliff Facade",
+      "label": "Cliffside Deck"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Howe Sound View Living Room",
+      "label": "Main Lounge"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Architectural Kitchen with Ocean View",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Ocean Horizon Spa Bath",
+      "label": "Master Bath"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "Perched high on granite bluffs above Howe Sound, this dramatic residence harmonizes concrete, dark zinc, and frameless glass. Watch eagle migrations and luxury cruise liners from your heated cantilever terrace.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar"
+  ],
+  "agent": {
+    "name": "Marcus Vance",
+    "role": "Pacific Northwest Director",
+    "photoUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (604) 555-6677",
+    "email": "marcus.vance@luxeestate.com"
+  }
+},
+{
+  "id": "barcelona-eixample-loft",
+  "slug": "barcelona-eixample-loft",
+  "title": "Passeig de Gràcia Modernist Penthouse",
+  "price": 4900,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "penthouse",
+  "location": {
+    "address": "88 Passeig de Gràcia",
+    "city": "Barcelona",
+    "state": "Catalonia",
+    "country": "Spain",
+    "lat": 41.3934,
+    "lng": 2.1611
+  },
+  "features": {
+    "beds": 2,
+    "baths": 2.5,
+    "sqm": 175,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Barcelona Rooftop Penthouse Terrace",
+      "label": "Rooftop Terrace"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Catalan Vaulted Living Room",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Modern Ceramic Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Serene Eixample Master Bedroom",
+      "label": "Master Bedroom"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "On Barcelona's most glamorous boulevard, this restored modernist jewel showcases vaulted Catalan ceilings, hydraulic mosaic tile floors, and a sun-soaked private terrace with plunge pool.",
+  "amenities": [
+    "Swimming Pool",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Claire Delacroix",
+    "role": "Southern Europe Lead",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "phone": "+34 93 215 4400",
+    "email": "claire.d@luxeestate.com"
+  }
+},
+{
+  "id": "beverly-hills-flats-manor",
+  "slug": "beverly-hills-flats-manor",
+  "title": "Beverly Hills Contemporary Manor",
+  "price": 13750000,
+  "type": "sale",
+  "category": "house",
+  "location": {
+    "address": "620 N Roxbury Dr",
+    "city": "Beverly Hills",
+    "state": "California",
+    "country": "USA",
+    "lat": 34.0736,
+    "lng": -118.4004
+  },
+  "features": {
+    "beds": 6,
+    "baths": 7,
+    "sqm": 890,
+    "garage": 3
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Beverly Hills Manor Pool & Lawn",
+      "label": "Pool & Grounds"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Voluminous Formal Living Room",
+      "label": "Formal Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Chef's Kitchen with Double Islands",
+      "label": "Gourmet Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Hotel-Grade Master Suite with Dual Closets",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "EXCLUSIVE",
+  "isFeatured": false,
+  "description": "Set on a wide, tree-lined avenue in the famed Flats of Beverly Hills. An architectural triumph pairing warm limestone, bronze accents, screening room, 500-bottle wine cellar, and manicured private grounds.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace",
+    "Wine Cellar",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Elena Rostova",
+    "role": "West Coast Principal",
+    "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    "phone": "+1 (310) 555-8821",
+    "email": "elena.rostova@luxeestate.com"
+  }
+},
+{
+  "id": "milan-brera-residence",
+  "slug": "milan-brera-residence",
+  "title": "Brera Architectural Flat",
+  "price": 6400,
+  "pricePeriod": "month",
+  "type": "rent",
+  "category": "apartment",
+  "location": {
+    "address": "Via Fiori Chiari 12",
+    "city": "Milan",
+    "state": "Lombardy",
+    "country": "Italy",
+    "lat": 45.4719,
+    "lng": 9.1878
+  },
+  "features": {
+    "beds": 2,
+    "baths": 2,
+    "sqm": 150,
+    "garage": 1
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Brera Design Living Salon",
+      "label": "Living Salon"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1512915922686-57c11dde9b6b?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Minimalist Italian Dining",
+      "label": "Dining Room"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Monolithic Ceppo di Gré Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Quiet Courtyard Bedroom",
+      "label": "Master Bedroom"
+    }
+  ],
+  "badge": "FOR RENT",
+  "isFeatured": false,
+  "description": "In the artistic heart of Brera, steps from the Pinacoteca. Designed by prominent Milanese architects with Ceppo di Gré stonework, bespoke brass accents, integrated sound system, and serene courtyard views.",
+  "amenities": [
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Smart Home System"
+  ],
+  "agent": {
+    "name": "Victoria Chesterfield",
+    "role": "European Prime Portfolio",
+    "photoUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+    "phone": "+39 02 8900 1200",
+    "email": "victoria.c@luxeestate.com"
+  }
+},
+{
+  "id": "cabo-pedregal-sanctuary",
+  "slug": "cabo-pedregal-sanctuary",
+  "title": "Cabo Pedregal Cliff Haven",
+  "price": 4850000,
+  "type": "sale",
+  "category": "villa",
+  "location": {
+    "address": "Camino de la Cumbre",
+    "city": "Cabo San Lucas",
+    "state": "Baja California Sur",
+    "country": "Mexico",
+    "lat": 22.8797,
+    "lng": -109.9167
+  },
+  "features": {
+    "beds": 4,
+    "baths": 5,
+    "sqm": 460,
+    "garage": 2
+  },
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Pedregal Infinity Pool Over Pacific",
+      "label": "Pacific View Pool"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Open Palapa Living Lounge",
+      "label": "Living Lounge"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Travertine Gourmet Kitchen",
+      "label": "Kitchen"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80",
+      "alt": "Ocean View Master Suite with Private Spa",
+      "label": "Master Suite"
+    }
+  ],
+  "badge": "FOR SALE",
+  "isFeatured": false,
+  "description": "Carved directly into the cliffs of exclusive Pedregal. Marvel at migrating humpback whales from the heated multi-tier infinity pool, outdoor fire pits, and shaded palapa bar overlooking crashing Pacific surf.",
+  "amenities": [
+    "Swimming Pool",
+    "Gym",
+    "Parking",
+    "Air Conditioning",
+    "High-speed Wifi",
+    "Patio / Terrace"
+  ],
+  "agent": {
+    "name": "Sofia Carrera",
+    "role": "Resort & Waterfront Partner",
+    "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    "phone": "+52 624 143 5500",
+    "email": "sofia.carrera@luxeestate.com"
+  }
+}
 ];
