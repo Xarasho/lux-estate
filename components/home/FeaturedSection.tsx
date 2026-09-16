@@ -13,7 +13,8 @@ export function FeaturedSection({
   properties,
   onViewAll,
 }: FeaturedSectionProps) {
-  if (properties.length === 0) return null;
+  const displayProperties = properties.slice(0, 2);
+  if (displayProperties.length === 0) return null;
 
   return (
     <section className="mb-16">
@@ -36,7 +37,7 @@ export function FeaturedSection({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {properties.map((property) => (
+        {displayProperties.map((property) => (
           <FeaturedPropertyCard key={property.id} property={property} />
         ))}
       </div>

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { HomeScreen } from "@/components/home/HomeScreen";
-import { getProperties, PROPERTIES_PER_PAGE } from "@/lib/properties";
+import { getProperties, getAvailableLocations, PROPERTIES_PER_PAGE } from "@/lib/properties";
 
 export default async function Page({
   searchParams,
@@ -11,7 +11,7 @@ export default async function Page({
 
   const page = Number(params.page ?? "1");
   const type = (params.type as "all" | "sale" | "rent") ?? "all";
-  const category = (params.category as string) ?? "all";
+  const category = (params.category as string) || "";
   const search = (params.search as string) ?? "";
   const location = (params.location as string) ?? "";
   const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
@@ -26,8 +26,20 @@ export default async function Page({
       : amenitiesParam.split(",").map((s) => s.trim()).filter(Boolean)
     : undefined;
 
-  const [featuredResult, marketResult] = await Promise.all([
-    getProperties({ featuredOnly: true }),
+  // User requirement:
+  // 1. Featured properties must NOT be shown when ANY chip is clicked (house, apartment, villa, all, penthouse).
+  // 2. Featured properties must NOT be shown when there is text in the search bar.
+  // 3. If NO chip is clicked and NO search text is present, then the 2 featured properties MUST be shown.
+  const isAnyChipClicked = Boolean(category && category.trim().length > 0);
+  const hasSearchText = Boolean(
+    (search && search.trim().length > 0) || (location && location.trim().length > 0)
+  );
+  const shouldShowFeatured = !isAnyChipClicked && !hasSearchText;
+
+  const [featuredResult, marketResult, availableLocations] = await Promise.all([
+    shouldShowFeatured
+      ? getProperties({ featuredOnly: true, pageSize: 2 })
+      : Promise.resolve({ data: [], count: 0, totalPages: 0 }),
     getProperties({
       page,
       pageSize: PROPERTIES_PER_PAGE,
@@ -42,6 +54,7 @@ export default async function Page({
       amenities,
       featuredOnly: false,
     }),
+    getAvailableLocations(),
   ]);
 
   return (
@@ -60,6 +73,7 @@ export default async function Page({
         activeBeds={beds}
         activeBaths={baths}
         activeAmenities={amenities}
+        availableLocations={availableLocations}
       />
     </Suspense>
   );

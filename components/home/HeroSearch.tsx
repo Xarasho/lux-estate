@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { LocationSuggestion } from "@/lib/properties";
 
 export interface HeroSearchProps {
   searchQuery?: string;
@@ -10,6 +11,7 @@ export interface HeroSearchProps {
   onSelectCategory?: (category: string) => void;
   onToggleFilters?: () => void;
   activeFiltersCount?: number;
+  availableLocations?: LocationSuggestion[];
 }
 
 const CATEGORIES: { label: string; value: string }[] = [
@@ -24,32 +26,135 @@ export function HeroSearch({
   searchQuery = "",
   onSearchChange,
   onSearchSubmit,
-  selectedCategory = "all",
+  selectedCategory = "",
   onSelectCategory,
   onToggleFilters,
   activeFiltersCount = 0,
+  availableLocations = [],
 }: HeroSearchProps) {
   const [internalQuery, setInternalQuery] = useState(searchQuery);
+  const [isFocused, setIsFocused] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Keep internal input in sync if searchQuery changes externally (e.g. modal or reset)
-  React.useEffect(() => {
+  // Keep internal input in sync if searchQuery changes externally
+  useEffect(() => {
     setInternalQuery(searchQuery);
   }, [searchQuery]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Filter matching locations in real-time based on what user is typing
+  const matchingLocations = useMemo(() => {
+    const q = internalQuery.trim().toLowerCase();
+    if (!q) {
+      // When empty and focused, show popular top locations
+      return availableLocations.slice(0, 5);
+    }
+
+    return availableLocations.filter((item) => {
+      const matchCity = item.city.toLowerCase().includes(q);
+      const matchState = item.state?.toLowerCase().includes(q) ?? false;
+      const matchCountry = item.country?.toLowerCase().includes(q) ?? false;
+      const matchAddress = item.address?.toLowerCase().includes(q) ?? false;
+      const matchLabel = item.label.toLowerCase().includes(q);
+      const matchSublabel = item.sublabel?.toLowerCase().includes(q) ?? false;
+      return matchCity || matchState || matchCountry || matchAddress || matchLabel || matchSublabel;
+    }).slice(0, 6);
+  }, [internalQuery, availableLocations]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setInternalQuery(val);
+    setHighlightedIndex(-1);
+    if (!isFocused) setIsFocused(true);
     if (onSearchChange) {
       onSearchChange(val);
     }
   };
 
+  const handleSelectLocation = (location: LocationSuggestion) => {
+    const valueToSet = location.city;
+    setInternalQuery(valueToSet);
+    setIsFocused(false);
+    if (onSearchChange) {
+      onSearchChange(valueToSet);
+    }
+    if (onSearchSubmit) {
+      onSearchSubmit(valueToSet);
+    }
+  };
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearchSubmit) {
+    setIsFocused(false);
+    if (highlightedIndex >= 0 && matchingLocations[highlightedIndex]) {
+      handleSelectLocation(matchingLocations[highlightedIndex]);
+    } else if (onSearchSubmit) {
       onSearchSubmit(internalQuery);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isFocused || matchingLocations.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev < matchingLocations.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : matchingLocations.length - 1
+      );
+    } else if (e.key === "Escape") {
+      setIsFocused(false);
+    }
+  };
+
+  const handleCategoryClick = (categoryValue: string) => {
+    if (!onSelectCategory) return;
+    if (selectedCategory && selectedCategory.toLowerCase() === categoryValue.toLowerCase()) {
+      // Toggle off: no chip is clicked
+      onSelectCategory("");
+    } else {
+      // Click this chip: house, apartment, villa, all, or penthouse
+      onSelectCategory(categoryValue);
+    }
+  };
+
+  // Helper to highlight matching characters
+  const highlightMatch = (text: string, query: string) => {
+    if (!query.trim()) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const parts = text.split(new RegExp(`(${escaped})`, "gi"));
+    return (
+      <>
+        {parts.map((part, i) =>
+          part.toLowerCase() === query.toLowerCase() ? (
+            <span key={i} className="font-bold text-mosque underline decoration-mosque/40">
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </>
+    );
+  };
+
+  const showDropdown = isFocused;
 
   return (
     <section className="py-12 md:py-16">
@@ -64,43 +169,129 @@ export function HeroSearch({
           .
         </h1>
 
-        {/* Search Bar Input */}
-        <form
-          onSubmit={handleFormSubmit}
-          className="relative group max-w-2xl mx-auto"
-        >
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <span className="material-icons text-nordic-muted text-2xl group-focus-within:text-mosque transition-colors">
-              search
-            </span>
-          </div>
-          <input
-            type="text"
-            value={internalQuery}
-            onChange={handleInputChange}
-            placeholder="Search by city, neighborhood, or address..."
-            className="block w-full pl-12 pr-28 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-base sm:text-lg outline-none"
-          />
-          <button
-            type="submit"
-            className="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20 cursor-pointer"
-          >
-            Search
-          </button>
-        </form>
+        {/* Search Bar Input & Dropdown Container */}
+        <div ref={containerRef} className="relative group max-w-2xl mx-auto z-30">
+          <form onSubmit={handleFormSubmit} className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="material-icons text-nordic-muted text-2xl group-focus-within:text-mosque transition-colors">
+                search
+              </span>
+            </div>
+            <input
+              ref={inputRef}
+              type="text"
+              value={internalQuery}
+              onChange={handleInputChange}
+              onFocus={() => setIsFocused(true)}
+              onKeyDown={handleKeyDown}
+              placeholder="Search by city, neighborhood, or address..."
+              className="block w-full pl-12 pr-28 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-base sm:text-lg outline-none"
+              autoComplete="off"
+            />
+            {internalQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setInternalQuery("");
+                  if (onSearchChange) onSearchChange("");
+                  if (onSearchSubmit) onSearchSubmit("");
+                  inputRef.current?.focus();
+                }}
+                className="absolute inset-y-0 right-24 pr-2 flex items-center text-nordic-muted hover:text-nordic-dark cursor-pointer transition-colors"
+                title="Clear search"
+              >
+                <span className="material-icons text-lg">cancel</span>
+              </button>
+            )}
+            <button
+              type="submit"
+              className="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20 cursor-pointer"
+            >
+              Search
+            </button>
+          </form>
+
+          {/* Location Matches Autocomplete Dropdown */}
+          {showDropdown && (
+            <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-nordic-dark/10 overflow-hidden text-left z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-2.5 bg-nordic-dark/[0.03] border-b border-nordic-dark/5 flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-nordic-muted flex items-center gap-1.5">
+                  <span className="material-icons text-sm text-mosque">place</span>
+                  {internalQuery.trim() ? "Matching Locations" : "Popular Locations"}
+                </span>
+                <span className="text-[11px] text-nordic-muted">
+                  {matchingLocations.length} found
+                </span>
+              </div>
+
+              {matchingLocations.length > 0 ? (
+                <ul className="py-1 max-h-72 overflow-y-auto divide-y divide-nordic-dark/5">
+                  {matchingLocations.map((item, idx) => {
+                    const isHighlighted = idx === highlightedIndex;
+                    return (
+                      <li
+                        key={`${item.city}-${item.address || ""}-${idx}`}
+                        onMouseEnter={() => setHighlightedIndex(idx)}
+                        onClick={() => handleSelectLocation(item)}
+                        className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-colors ${
+                          isHighlighted ? "bg-mosque/10" : "hover:bg-nordic-dark/[0.03]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                            isHighlighted ? "bg-mosque text-white" : "bg-mosque/10 text-mosque"
+                          }`}>
+                            <span className="material-icons text-base">location_on</span>
+                          </div>
+                          <div className="truncate">
+                            <p className="text-sm font-medium text-nordic-dark truncate">
+                              {highlightMatch(item.label, internalQuery)}
+                            </p>
+                            {item.sublabel && (
+                              <p className="text-xs text-nordic-muted truncate">
+                                {highlightMatch(item.sublabel, internalQuery)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-nordic-dark/5 text-nordic-muted flex-shrink-0 ml-2">
+                          {item.count} {item.count === 1 ? "home" : "homes"}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="p-6 text-center">
+                  <span className="material-icons text-3xl text-nordic-muted/50 mb-1 block">
+                    location_off
+                  </span>
+                  <p className="text-sm font-medium text-nordic-dark">
+                    No locations match &quot;{internalQuery}&quot;
+                  </p>
+                  <p className="text-xs text-nordic-muted mt-1">
+                    Press <kbd className="px-1.5 py-0.5 bg-nordic-dark/5 rounded text-[10px] font-semibold text-nordic-dark">Enter</kbd> to search anywhere in property titles & descriptions.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Category Pills & Filters */}
-        <div className="flex items-center justify-center gap-3 overflow-x-auto hide-scroll py-2 px-4 -mx-4">
+        <div className="flex items-center justify-center gap-3 overflow-x-auto hide-scroll py-2 px-4 -mx-4 relative z-10">
           {CATEGORIES.map((category) => {
-            const isActive = selectedCategory === category.value;
+            const isActive = Boolean(
+              selectedCategory && selectedCategory.toLowerCase() === category.value.toLowerCase()
+            );
             return (
               <button
                 key={category.value}
                 type="button"
-                onClick={() => onSelectCategory && onSelectCategory(category.value)}
-                className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                onClick={() => handleCategoryClick(category.value)}
+                className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
                   isActive
-                    ? "bg-nordic-dark text-white shadow-lg shadow-nordic-dark/10 hover:-translate-y-0.5"
+                    ? "bg-nordic-dark text-white shadow-lg shadow-nordic-dark/10 scale-105"
                     : "bg-white border border-nordic-dark/5 text-nordic-muted hover:text-nordic-dark hover:border-mosque/50 hover:bg-mosque/5"
                 }`}
               >

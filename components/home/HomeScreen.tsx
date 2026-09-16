@@ -8,6 +8,7 @@ import { FeaturedSection } from "@/components/home/FeaturedSection";
 import { MarketSection } from "@/components/home/MarketSection";
 import { SearchFiltersModal, FilterValues } from "@/components/home/SearchFiltersModal";
 import { Property } from "@/types/property";
+import { LocationSuggestion } from "@/lib/properties";
 
 export interface HomeScreenProps {
   featuredProperties: Property[];
@@ -23,6 +24,7 @@ export interface HomeScreenProps {
   activeBeds?: number;
   activeBaths?: number;
   activeAmenities?: string[];
+  availableLocations?: LocationSuggestion[];
 }
 
 export function HomeScreen({
@@ -39,6 +41,7 @@ export function HomeScreen({
   activeBeds,
   activeBaths,
   activeAmenities = [],
+  availableLocations = [],
 }: HomeScreenProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -67,12 +70,20 @@ export function HomeScreen({
     let count = 0;
     if (activeMinPrice && activeMinPrice > 0) count++;
     if (activeMaxPrice && activeMaxPrice > 0 && activeMaxPrice < 15000000) count++;
-    if (activeCategory && activeCategory !== "all") count++;
+    if (activeCategory && activeCategory.trim() !== "") count++;
     if (activeBeds && activeBeds > 0) count++;
     if (activeBaths && activeBaths > 0) count++;
     if (activeAmenities && activeAmenities.length > 0) count += activeAmenities.length;
     return count;
   }, [activeMinPrice, activeMaxPrice, activeCategory, activeBeds, activeBaths, activeAmenities]);
+
+  // User requirement:
+  // 1. Featured properties must NOT be shown when ANY chip is clicked (house, apartment, villa, all, penthouse).
+  // 2. Featured properties must NOT be shown when there is text in the search bar.
+  // 3. If NO chip is clicked and NO search text is present, then the 2 featured properties MUST be shown.
+  const isAnyChipClicked = Boolean(selectedCategory && selectedCategory.trim().length > 0);
+  const hasSearchText = Boolean(searchQuery && searchQuery.trim().length > 0);
+  const shouldShowFeatured = !isAnyChipClicked && !hasSearchText;
 
   // Helper to build URL with updated params
   const buildUrl = (overrides: Record<string, string>) => {
@@ -117,9 +128,11 @@ export function HomeScreen({
     setSearchQuery(value);
   };
 
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (queryToSubmit?: string) => {
+    const q = queryToSubmit !== undefined ? queryToSubmit : searchQuery;
+    setSearchQuery(q);
     startTransition(() => {
-      router.push(buildUrl({ search: searchQuery }), { scroll: false });
+      router.push(buildUrl({ search: q }), { scroll: false });
     });
   };
 
@@ -153,12 +166,12 @@ export function HomeScreen({
   // Clear all filters action
   const handleClearAllFilters = () => {
     setSearchQuery("");
-    setSelectedCategory("all");
+    setSelectedCategory("");
     startTransition(() => {
       router.push(
         buildUrl({
           search: "",
-          category: "all",
+          category: "",
           minPrice: "",
           maxPrice: "",
           beds: "",
@@ -171,19 +184,10 @@ export function HomeScreen({
     });
   };
 
-  // Filtered featured: still done client-side since all featured are loaded at once
+  // Filtered featured: strictly capped at 2, only evaluated when featured are loaded
   const filteredFeatured = useMemo(() => {
-    return featuredProperties.filter((item) => {
-      const matchesSearch =
-        !searchQuery ||
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.location.address.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || item.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [featuredProperties, searchQuery, selectedCategory]);
+    return featuredProperties.slice(0, 2);
+  }, [featuredProperties]);
 
   const modalInitialValues: FilterValues = useMemo(
     () => ({
@@ -223,6 +227,7 @@ export function HomeScreen({
           onSelectCategory={handleCategorySelect}
           onToggleFilters={() => setIsFilterModalOpen(true)}
           activeFiltersCount={activeFiltersCount}
+          availableLocations={availableLocations}
         />
 
         {/* Active Filters Summary Bar (if any filters applied) */}
@@ -231,6 +236,11 @@ export function HomeScreen({
             <span className="text-xs font-semibold uppercase tracking-wider text-nordic-muted mr-1">
               Active Filters:
             </span>
+            {activeCategory && activeCategory !== "all" && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark capitalize shadow-xs">
+                Category: {activeCategory}
+              </span>
+            )}
             {activeMinPrice && activeMinPrice > 0 && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark shadow-xs">
                 Min ${(activeMinPrice / 1000000).toFixed(1)}M
@@ -270,8 +280,10 @@ export function HomeScreen({
           </div>
         )}
 
-        {/* Featured Collections Section */}
-        <FeaturedSection properties={filteredFeatured} />
+        {/* Featured Collections Section — only shown when NO chip is clicked and NO search text is present */}
+        {shouldShowFeatured && filteredFeatured.length > 0 && (
+          <FeaturedSection properties={filteredFeatured} />
+        )}
 
         {/* New in Market Section */}
         <MarketSection

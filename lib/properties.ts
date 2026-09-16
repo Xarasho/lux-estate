@@ -113,6 +113,16 @@ export interface GetPropertiesResult {
   totalPages: number;
 }
 
+export interface LocationSuggestion {
+  city: string;
+  state?: string;
+  country?: string;
+  address?: string;
+  label: string;
+  sublabel?: string;
+  count: number;
+}
+
 export async function getProperties({
   page = 1,
   pageSize = PROPERTIES_PER_PAGE,
@@ -130,14 +140,27 @@ export async function getProperties({
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
+  const isFiltered = Boolean(
+    (type && type !== "all") ||
+    (category && category.trim() !== "" && category.toLowerCase() !== "any type") ||
+    (search && search.trim()) ||
+    (location && location.trim()) ||
+    (minPrice !== undefined && minPrice > 0) ||
+    (maxPrice !== undefined && maxPrice > 0 && maxPrice < 15000000) ||
+    (beds !== undefined && beds > 0) ||
+    (baths !== undefined && baths > 0) ||
+    (amenities && amenities.length > 0)
+  );
+
   let query = supabase
     .from("properties")
     .select("*", { count: "exact" })
     .order("created_at", { ascending: false });
 
   if (featuredOnly) {
-    query = query.eq("is_featured", true);
-  } else {
+    query = query.eq("is_featured", true).limit(pageSize ?? 2);
+  } else if (!isFiltered) {
+    // Only exclude featured properties on default unfiltered homepage to avoid visual duplication
     query = query.eq("is_featured", false);
   }
 
@@ -146,7 +169,7 @@ export async function getProperties({
   }
 
   // Handle category mapping (e.g. condo -> apartment, townhouse -> house)
-  if (category && category !== "all" && category.toLowerCase() !== "any type") {
+  if (category && category !== "all" && category.trim() !== "" && category.toLowerCase() !== "any type") {
     const normalizedCategory =
       category.toLowerCase() === "condo"
         ? "apartment"
@@ -159,8 +182,9 @@ export async function getProperties({
   const effectiveSearch = search || location;
   if (effectiveSearch && effectiveSearch.trim()) {
     const term = effectiveSearch.trim();
+    // Search strictly by property location (city, address, state, country)
     query = query.or(
-      `title.ilike.%${term}%,location->>city.ilike.%${term}%,location->>address.ilike.%${term}%,location->>state.ilike.%${term}%,location->>country.ilike.%${term}%`
+      `location->>city.ilike.%${term}%,location->>address.ilike.%${term}%,location->>state.ilike.%${term}%,location->>country.ilike.%${term}%`
     );
   }
 
@@ -192,11 +216,16 @@ export async function getProperties({
 
   if (error) {
     console.error("[getProperties] Supabase error:", error.message);
-    let mockList = featuredOnly ? FEATURED_PROPERTIES : INITIAL_MARKET_PROPERTIES;
+    let mockList = featuredOnly
+      ? FEATURED_PROPERTIES
+      : isFiltered
+      ? [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES]
+      : INITIAL_MARKET_PROPERTIES;
+
     if (type && type !== "all") {
       mockList = mockList.filter((p) => p.type === type);
     }
-    if (category && category !== "all" && category.toLowerCase() !== "any type") {
+    if (category && category !== "all" && category.trim() !== "" && category.toLowerCase() !== "any type") {
       const normalizedCategory =
         category.toLowerCase() === "condo"
           ? "apartment"
@@ -209,9 +238,8 @@ export async function getProperties({
       const st = effectiveSearch.trim().toLowerCase();
       mockList = mockList.filter(
         (p) =>
-          p.title.toLowerCase().includes(st) ||
-          p.location.city.toLowerCase().includes(st) ||
-          p.location.address.toLowerCase().includes(st) ||
+          (p.location.city && p.location.city.toLowerCase().includes(st)) ||
+          (p.location.address && p.location.address.toLowerCase().includes(st)) ||
           (p.location.state && p.location.state.toLowerCase().includes(st)) ||
           (p.location.country && p.location.country.toLowerCase().includes(st))
       );
@@ -236,7 +264,7 @@ export async function getProperties({
 
     const total = mockList.length;
     const paginated = featuredOnly
-      ? mockList
+      ? mockList.slice(0, pageSize ?? 2)
       : mockList.slice(from, to + 1);
     return {
       data: paginated,
@@ -309,5 +337,78 @@ export async function getAllPropertySlugs(): Promise<string[]> {
 
   const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
   return allMocks.map((p) => p.slug || p.id);
+}
+
+export async function getAvailableLocations(): Promise<LocationSuggestion[]> {
+  try {
+    const { data, error } = await supabase
+      .from("properties")
+      .select("location");
+
+    if (!error && data && data.length > 0) {
+      const cityMap = new Map<string, LocationSuggestion>();
+
+      for (const row of data) {
+        const loc = row.location as {
+          city?: string;
+          state?: string;
+          country?: string;
+          address?: string;
+        };
+        if (!loc || !loc.city) continue;
+        const cityKey = loc.city.trim().toLowerCase();
+
+        if (!cityMap.has(cityKey)) {
+          const subParts = [loc.state, loc.country].filter(Boolean);
+          cityMap.set(cityKey, {
+            city: loc.city.trim(),
+            state: loc.state?.trim() || undefined,
+            country: loc.country?.trim() || undefined,
+            address: loc.address?.trim() || undefined,
+            label: loc.city.trim(),
+            sublabel: subParts.length > 0 ? subParts.join(", ") : undefined,
+            count: 1,
+          });
+        } else {
+          const item = cityMap.get(cityKey)!;
+          item.count += 1;
+          if (!item.state && loc.state) item.state = loc.state.trim();
+          if (!item.country && loc.country) item.country = loc.country.trim();
+          const subParts = [item.state, item.country].filter(Boolean);
+          if (subParts.length > 0) {
+            item.sublabel = subParts.join(", ");
+          }
+        }
+      }
+
+      return Array.from(cityMap.values()).sort((a, b) => b.count - a.count);
+    }
+  } catch (err) {
+    console.warn("[getAvailableLocations] Error fetching locations:", err);
+  }
+
+  // Graceful fallback to mock data
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  const cityMap = new Map<string, LocationSuggestion>();
+  for (const p of allMocks) {
+    if (!p.location || !p.location.city) continue;
+    const cityKey = p.location.city.trim().toLowerCase();
+    if (!cityMap.has(cityKey)) {
+      const subParts = [p.location.state, p.location.country].filter(Boolean);
+      cityMap.set(cityKey, {
+        city: p.location.city.trim(),
+        state: p.location.state?.trim() || undefined,
+        country: p.location.country?.trim() || undefined,
+        address: p.location.address?.trim() || undefined,
+        label: p.location.city.trim(),
+        sublabel: subParts.length > 0 ? subParts.join(", ") : undefined,
+        count: 1,
+      });
+    } else {
+      cityMap.get(cityKey)!.count += 1;
+    }
+  }
+
+  return Array.from(cityMap.values()).sort((a, b) => b.count - a.count);
 }
 

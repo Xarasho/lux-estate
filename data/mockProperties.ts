@@ -161,7 +161,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       },
       {
         "alt": "Minimalist Tea Chamber",
-        "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+        "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
         "label": "Zen Room"
       }
     ],
@@ -212,7 +212,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       },
       {
         "alt": "Harbourfront Lounge",
-        "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+        "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
         "label": "Living Room"
       },
       {
@@ -333,7 +333,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       },
       {
         "alt": "Bay View Living Lounge",
-        "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+        "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
         "label": "Living Lounge"
       },
       {
@@ -756,7 +756,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       },
       {
         "alt": "Double-Height Great Room",
-        "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+        "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
         "label": "Great Room"
       },
       {
@@ -998,7 +998,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
       },
       {
         "alt": "Panoramic Ocean View Lounge",
-        "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+        "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
         "label": "Living Lounge"
       },
       {
@@ -1551,7 +1551,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
   },
   "images": [
     {
-      "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+      "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
       "alt": "Roppongi Skyline View from Living Room",
       "label": "Living Salon"
     },
@@ -2360,7 +2360,7 @@ export const INITIAL_MARKET_PROPERTIES: Property[] = [
   },
   "images": [
     {
-      "url": "https://images.unsplash.com/photo-1502005229762-ae1b460020e2?auto=format&fit=crop&w=1200&q=80",
+      "url": "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80",
       "alt": "Brera Design Living Salon",
       "label": "Living Salon"
     },
