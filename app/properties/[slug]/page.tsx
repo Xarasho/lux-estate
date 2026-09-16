@@ -10,6 +10,7 @@ import { ActionButtons } from "@/components/property/ActionButtons";
 import { getPropertyBySlug, getAllPropertySlugs } from "@/lib/properties";
 
 import { PropertyMapClient } from "@/components/property/PropertyMapClient";
+import { getDictionary } from "@/lib/dictionary";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -60,7 +61,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PropertyDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const property = await getPropertyBySlug(slug);
+
+  const [property, dict] = await Promise.all([
+    getPropertyBySlug(slug),
+    getDictionary(),
+  ]);
 
   if (!property) {
     notFound();
@@ -73,9 +78,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   }).format(property.price);
 
   const fullAddress = property.location.city
-    ? `${property.location.address}, ${property.location.city}${
-        property.location.state ? `, ${property.location.state}` : ""
-      }`
+    ? `${property.location.address}, ${property.location.city}${property.location.state ? `, ${property.location.state}` : ""
+    }`
     : property.location.address;
 
   const agent = property.agent || {
@@ -91,13 +95,13 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     property.amenities && property.amenities.length > 0
       ? property.amenities
       : [
-          "Smart Home System",
-          "Swimming Pool",
-          "Central Heating & Cooling",
-          "Electric Vehicle Charging",
-          "Private Gym",
-          "Wine Cellar",
-        ];
+        "Smart Home System",
+        "Swimming Pool",
+        "Central Heating & Cooling",
+        "Electric Vehicle Charging",
+        "Private Gym",
+        "Wine Cellar",
+      ];
 
   // Schema.org structured data (RealEstateListing JSON-LD per best-practices.md)
   const jsonLd = {
@@ -135,7 +139,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       />
 
       {/* Top Navbar with clickable Villa brand logo returning to Home */}
-      <Navbar activeNav="buy" />
+      <Navbar activeNav="buy" dict={dict?.navbar} />
 
       {/* Main Content matching code.html exact 12-col layout */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
@@ -160,7 +164,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                     {formattedPrice}
                     {property.pricePeriod && (
                       <span className="text-base font-normal text-nordic/60">
-                        /{property.pricePeriod === "month" ? "mo" : property.pricePeriod}
+                        /{property.pricePeriod === "month" ? dict?.property?.month || "mo" : property.pricePeriod}
                       </span>
                     )}
                   </h1>
@@ -210,6 +214,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                   propertyTitle={property.title}
                   propertyPrice={formattedPrice}
                   agent={agent}
+                  dict={dict?.property}
                 />
               </div>
 
@@ -228,31 +233,31 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           <div className="lg:col-span-8 lg:row-start-2 -mt-8 space-y-8">
             {/* Property Features Grid */}
             <div className="bg-white p-8 rounded-xl shadow-sm border border-mosque/5">
-              <h2 className="text-lg font-semibold mb-6 text-nordic">Property Features</h2>
+              <h2 className="text-lg font-semibold mb-6 text-nordic">{dict?.property?.features_title || "Property Features"}</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10">
                   <span className="material-icons text-mosque text-2xl mb-2">square_foot</span>
                   <span className="text-xl font-bold text-nordic">{property.features.sqm}</span>
                   <span className="text-xs uppercase tracking-wider text-nordic/50">
-                    Square Meters
+                    {dict?.property?.sqm || "Square Meters"}
                   </span>
                 </div>
                 <div className="flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10">
                   <span className="material-icons text-mosque text-2xl mb-2">bed</span>
                   <span className="text-xl font-bold text-nordic">{property.features.beds}</span>
-                  <span className="text-xs uppercase tracking-wider text-nordic/50">Bedrooms</span>
+                  <span className="text-xs uppercase tracking-wider text-nordic/50">{dict?.property?.beds || "Bedrooms"}</span>
                 </div>
                 <div className="flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10">
                   <span className="material-icons text-mosque text-2xl mb-2">shower</span>
                   <span className="text-xl font-bold text-nordic">{property.features.baths}</span>
-                  <span className="text-xs uppercase tracking-wider text-nordic/50">Bathrooms</span>
+                  <span className="text-xs uppercase tracking-wider text-nordic/50">{dict?.property?.baths || "Bathrooms"}</span>
                 </div>
                 <div className="flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10">
                   <span className="material-icons text-mosque text-2xl mb-2">directions_car</span>
                   <span className="text-xl font-bold text-nordic">
                     {property.features.garage || 2}
                   </span>
-                  <span className="text-xs uppercase tracking-wider text-nordic/50">Garage</span>
+                  <span className="text-xs uppercase tracking-wider text-nordic/50">{dict?.property?.garage || "Garage"}</span>
                 </div>
               </div>
             </div>
@@ -263,11 +268,12 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                 property.description ||
                 "Experience modern luxury in this architecturally stunning home located in the heart of Palo Alto. Designed with an emphasis on indoor-outdoor living, the residence features floor-to-ceiling glass walls that flood the interiors with natural light.\n\nThe open-concept kitchen is equipped with top-of-the-line appliances and custom cabinetry, perfect for culinary enthusiasts. Retreat to the primary suite, a sanctuary of relaxation with a spa-inspired bath and private balcony."
               }
+              dict={dict?.property}
             />
 
             {/* Amenities Grid */}
             <div className="bg-white p-8 rounded-xl shadow-sm border border-mosque/5">
-              <h2 className="text-lg font-semibold mb-6 text-nordic">Amenities</h2>
+              <h2 className="text-lg font-semibold mb-6 text-nordic">{dict?.property?.amenities_title || "Amenities"}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                 {amenitiesList.map((amenity, index) => (
                   <div key={index} className="flex items-center gap-3 text-nordic/70">
@@ -279,7 +285,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             </div>
 
             {/* Mortgage Calculator Banner & Modal */}
-            <MortgageCalculator price={property.price} />
+            <MortgageCalculator price={property.price} dict={dict?.property} />
           </div>
         </div>
       </main>
@@ -288,7 +294,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       <footer className="bg-white border-t border-slate-200 mt-12 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-sm text-nordic/50">
-            © 2026 LuxeEstate Inc. All rights reserved.
+            {dict?.footer?.rights || "© 2026 LuxeEstate Inc. All rights reserved."}
           </div>
           <div className="flex gap-6">
             <a

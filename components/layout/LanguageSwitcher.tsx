@@ -31,9 +31,9 @@ export function LanguageSwitcher() {
   };
 
   const languageNames: Record<Locale, string> = {
-    es: "Español",
-    en: "English",
-    fr: "Français",
+    es: "🇪🇸 Español",
+    en: "🇺🇸 English",
+    fr: "🇫🇷 Français",
   };
 
   return (

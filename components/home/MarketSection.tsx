@@ -12,6 +12,7 @@ export interface MarketSectionProps {
   currentPage: number;
   totalPages: number;
   totalCount: number;
+  dict?: any;
 }
 
 export function MarketSection({
@@ -21,6 +22,7 @@ export function MarketSection({
   currentPage,
   totalPages,
   totalCount,
+  dict,
 }: MarketSectionProps) {
   return (
     <section>
@@ -28,12 +30,12 @@ export function MarketSection({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-light text-nordic-dark">
-            New in Market
+            {dict?.market_title || "New in Market"}
           </h2>
           <p className="text-nordic-muted mt-1 text-sm">
             {totalCount > 0
-              ? `${totalCount} propiedad${totalCount !== 1 ? "es" : ""} disponible${totalCount !== 1 ? "s" : ""}`
-              : "Fresh opportunities added this week."}
+              ? `${totalCount} ${totalCount !== 1 ? (dict?.homes || "properties") : (dict?.home_singular || "property")}`
+              : (dict?.market_subtitle || "Fresh opportunities added this week.")}
           </p>
         </div>
 
@@ -48,7 +50,7 @@ export function MarketSection({
                 : "text-nordic-muted hover:text-nordic-dark"
             }`}
           >
-            All
+            {dict?.navbar?.all || "All"}
           </button>
           <button
             type="button"
@@ -59,7 +61,7 @@ export function MarketSection({
                 : "text-nordic-muted hover:text-nordic-dark"
             }`}
           >
-            Buy
+            {dict?.navbar?.buy || "Buy"}
           </button>
           <button
             type="button"
@@ -70,7 +72,7 @@ export function MarketSection({
                 : "text-nordic-muted hover:text-nordic-dark"
             }`}
           >
-            Rent
+            {dict?.navbar?.rent || "Rent"}
           </button>
         </div>
       </div>
@@ -82,10 +84,10 @@ export function MarketSection({
             home_work
           </span>
           <p className="text-nordic-dark font-medium text-lg">
-            No properties found
+            {dict?.no_properties || "No properties found"}
           </p>
           <p className="text-nordic-muted text-sm mt-1">
-            Try adjusting your search criteria or filters.
+            {dict?.no_properties_hint || "Try adjusting your search criteria or filters."}
           </p>
         </div>
       ) : (

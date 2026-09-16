@@ -4,9 +4,10 @@ import React, { useState, useMemo } from "react";
 
 export interface MortgageCalculatorProps {
   price: number;
+  dict?: any;
 }
 
-export function MortgageCalculator({ price }: MortgageCalculatorProps) {
+export function MortgageCalculator({ price, dict }: MortgageCalculatorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [downPaymentPercent, setDownPaymentPercent] = useState(20);
   const [loanTermYears, setLoanTermYears] = useState(30);
@@ -45,6 +46,8 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
 
   const downPaymentAmount = Math.round(price * (downPaymentPercent / 100));
 
+  const mo = dict?.month || "mo";
+
   return (
     <>
       <div className="bg-mosque/5 p-6 rounded-xl border border-mosque/10 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -53,10 +56,11 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
             <span className="material-icons">calculate</span>
           </div>
           <div>
-            <h3 className="font-semibold text-nordic">Estimated Payment</h3>
+            <h3 className="font-semibold text-nordic">{dict?.estimated_payment || "Estimated Payment"}</h3>
             <p className="text-sm text-nordic/60">
-              Starting from{" "}
-              <strong className="text-mosque">{formattedDefaultMonthly}/mo</strong> with 20% down
+              {dict?.starting_from || "Starting from"}{" "}
+              <strong className="text-mosque">{formattedDefaultMonthly}/{mo}</strong>{" "}
+              {dict?.with_down || "with 20% down"}
             </p>
           </div>
         </div>
@@ -65,7 +69,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
           onClick={() => setIsOpen(true)}
           className="whitespace-nowrap px-4 py-2 bg-white border border-nordic/10 rounded-lg text-sm font-semibold hover:border-mosque transition-colors text-nordic cursor-pointer shadow-sm hover:shadow"
         >
-          Calculate Mortgage
+          {dict?.calculate_mortgage || "Calculate Mortgage"}
         </button>
       </div>
 
@@ -91,19 +95,19 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
                 <span className="material-icons">calculate</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-nordic">Mortgage Calculator</h3>
-                <p className="text-xs text-nordic/60">Customize financing options for this home</p>
+                <h3 className="text-xl font-bold text-nordic">{dict?.mortgage_calculator || "Mortgage Calculator"}</h3>
+                <p className="text-xs text-nordic/60">{dict?.customize_financing || "Customize financing options for this home"}</p>
               </div>
             </div>
 
             {/* Monthly payment display */}
             <div className="bg-clear-day p-5 rounded-xl text-center mb-6 border border-mosque/10">
               <span className="text-xs font-semibold text-nordic/60 uppercase tracking-wider">
-                Estimated Monthly Payment
+                {dict?.estimated_monthly || "Estimated Monthly Payment"}
               </span>
               <div className="text-3xl sm:text-4xl font-extrabold text-mosque mt-1">
                 {formattedCurrentMonthly}
-                <span className="text-sm font-normal text-nordic/60">/mo</span>
+                <span className="text-sm font-normal text-nordic/60">/{mo}</span>
               </div>
             </div>
 
@@ -111,7 +115,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
               {/* Down payment */}
               <div>
                 <div className="flex justify-between font-medium text-nordic mb-1.5">
-                  <span>Down Payment ({downPaymentPercent}%)</span>
+                  <span>{dict?.down_payment || "Down Payment"} ({downPaymentPercent}%)</span>
                   <span className="font-semibold text-mosque">
                     ${downPaymentAmount.toLocaleString()}
                   </span>
@@ -129,7 +133,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
 
               {/* Loan Term */}
               <div>
-                <span className="block font-medium text-nordic mb-1.5">Loan Term</span>
+                <span className="block font-medium text-nordic mb-1.5">{dict?.loan_term || "Loan Term"}</span>
                 <div className="grid grid-cols-3 gap-2">
                   {[15, 20, 30].map((years) => (
                     <button
@@ -142,7 +146,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
                           : "border-nordic/10 text-nordic/70 hover:border-mosque"
                       }`}
                     >
-                      {years} Years
+                      {years} {dict?.years || "Years"}
                     </button>
                   ))}
                 </div>
@@ -151,7 +155,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
               {/* Interest Rate */}
               <div>
                 <div className="flex justify-between font-medium text-nordic mb-1.5">
-                  <span>Interest Rate</span>
+                  <span>{dict?.interest_rate || "Interest Rate"}</span>
                   <span className="font-semibold text-mosque">{interestRate}%</span>
                 </div>
                 <input
@@ -171,7 +175,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
               onClick={() => setIsOpen(false)}
               className="mt-6 w-full py-3 bg-mosque hover:bg-primary-hover text-white font-medium rounded-lg shadow-md transition-all cursor-pointer"
             >
-              Done
+              {dict?.done || "Done"}
             </button>
           </div>
         </div>

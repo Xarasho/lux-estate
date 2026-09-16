@@ -4,9 +4,10 @@ import React, { useState } from "react";
 
 export interface AboutSectionProps {
   description: string;
+  dict?: any;
 }
 
-export function AboutSection({ description }: AboutSectionProps) {
+export function AboutSection({ description, dict }: AboutSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Split description into paragraphs
@@ -22,7 +23,7 @@ export function AboutSection({ description }: AboutSectionProps) {
 
   return (
     <div className="bg-white p-8 rounded-xl shadow-sm border border-mosque/5">
-      <h2 className="text-lg font-semibold mb-4 text-nordic">About this home</h2>
+      <h2 className="text-lg font-semibold mb-4 text-nordic">{dict?.about_title || "About this home"}</h2>
       <div className="prose prose-slate max-w-none text-nordic/70 leading-relaxed space-y-4">
         <p>{defaultParagraphs[0]}</p>
         {defaultParagraphs.length > 1 && (
@@ -35,7 +36,7 @@ export function AboutSection({ description }: AboutSectionProps) {
         ))}
         {isExpanded && defaultParagraphs.length <= 2 && (
           <p className="text-nordic/60 text-sm italic">
-            This residence is outfitted with energy-efficient systems, custom architectural millwork, and private landscaped outdoor entertaining spaces. Contact the listing agent for full specifications and building blueprints.
+            {dict?.about_extra || "This residence is outfitted with energy-efficient systems, custom architectural millwork, and private landscaped outdoor entertaining spaces. Contact the listing agent for full specifications and building blueprints."}
           </p>
         )}
       </div>
@@ -45,7 +46,7 @@ export function AboutSection({ description }: AboutSectionProps) {
         onClick={() => setIsExpanded(!isExpanded)}
         className="mt-4 text-mosque font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
       >
-        <span>{isExpanded ? "Show less" : "Read more"}</span>
+        <span>{isExpanded ? (dict?.show_less || "Show less") : (dict?.read_more || "Read more")}</span>
         <span className="material-icons text-sm">
           {isExpanded ? "arrow_upward" : "arrow_forward"}
         </span>

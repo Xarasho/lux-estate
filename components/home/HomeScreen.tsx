@@ -241,7 +241,7 @@ export function HomeScreen({
             </span>
             {activeCategory && activeCategory !== "all" && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark capitalize shadow-xs">
-                Category: {activeCategory}
+                {activeCategory}
               </span>
             )}
             {activeMinPrice && activeMinPrice > 0 && (
@@ -256,12 +256,12 @@ export function HomeScreen({
             )}
             {activeBeds && activeBeds > 0 && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark shadow-xs">
-                {activeBeds}+ Beds
+                {activeBeds}+ {dict?.property?.beds || "Beds"}
               </span>
             )}
             {activeBaths && activeBaths > 0 && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark shadow-xs">
-                {activeBaths}+ Baths
+                {activeBaths}+ {dict?.property?.baths || "Baths"}
               </span>
             )}
             {activeAmenities &&
@@ -278,14 +278,14 @@ export function HomeScreen({
               onClick={handleClearAllFilters}
               className="text-xs font-medium text-red-600 hover:text-red-700 underline underline-offset-2 ml-2 cursor-pointer transition-colors"
             >
-              Reset all
+              {dict?.home?.reset_filters || "Reset all"}
             </button>
           </div>
         )}
 
         {/* Featured Collections Section — only shown when NO chip is clicked and NO search text is present */}
         {shouldShowFeatured && filteredFeatured.length > 0 && (
-          <FeaturedSection properties={filteredFeatured} />
+          <FeaturedSection properties={filteredFeatured} dict={dict?.home} />
         )}
 
         {/* New in Market Section */}
@@ -296,6 +296,7 @@ export function HomeScreen({
           currentPage={currentPage}
           totalPages={totalPages}
           totalCount={totalCount}
+          dict={dict}
         />
       </main>
 

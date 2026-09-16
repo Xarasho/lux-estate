@@ -7,15 +7,23 @@ export interface ActionButtonsProps {
   propertyTitle: string;
   propertyPrice: string;
   agent?: PropertyAgent;
+  dict?: any;
 }
 
 export function ActionButtons({
   propertyTitle,
   propertyPrice,
   agent,
+  dict,
 }: ActionButtonsProps) {
   const [activeModal, setActiveModal] = useState<"visit" | "contact" | null>(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const defaultMessage = dict?.message_default
+    ? dict.message_default
+        .replace("{title}", propertyTitle)
+        .replace("{price}", propertyPrice)
+    : `Hello, I am interested in ${propertyTitle} listed at ${propertyPrice}. Please send me more details.`;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,7 +31,7 @@ export function ActionButtons({
     phone: "",
     date: "",
     time: "11:00 AM",
-    message: `Hello, I am interested in ${propertyTitle} listed at ${propertyPrice}. Please send me more details.`,
+    message: defaultMessage,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,7 +57,7 @@ export function ActionButtons({
           <span className="material-icons text-xl group-hover:scale-110 transition-transform">
             calendar_today
           </span>
-          Schedule Visit
+          {dict?.schedule_visit || "Schedule Visit"}
         </button>
 
         <button
@@ -58,7 +66,7 @@ export function ActionButtons({
           className="w-full bg-transparent border border-nordic/10 hover:border-mosque text-nordic/80 hover:text-mosque py-4 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <span className="material-icons text-xl">mail_outline</span>
-          Contact Agent
+          {dict?.contact || "Contact Agent"}
         </button>
       </div>
 
@@ -85,29 +93,33 @@ export function ActionButtons({
                   <span className="material-icons text-3xl">check</span>
                 </div>
                 <h3 className="text-xl font-bold text-nordic">
-                  {activeModal === "visit" ? "Visit Scheduled!" : "Message Sent!"}
+                  {activeModal === "visit"
+                    ? (dict?.visit_scheduled || "Visit Scheduled!")
+                    : (dict?.message_sent || "Message Sent!")}
                 </h3>
                 <p className="text-sm text-nordic/70">
-                  {agentName} has received your request and will contact you promptly at{" "}
-                  {formData.phone || formData.email || "your contact number"}.
+                  {(dict?.agent_contact_confirm || "{agent} has received your request and will contact you promptly.")
+                    .replace("{agent}", agentName)}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="mb-2">
                   <h3 className="text-xl font-bold text-nordic">
-                    {activeModal === "visit" ? "Schedule a Private Visit" : `Contact ${agentName}`}
+                    {activeModal === "visit"
+                      ? (dict?.schedule_private_visit || "Schedule a Private Visit")
+                      : (dict?.contact_agent_modal || "Contact {agent}").replace("{agent}", agentName)}
                   </h3>
                   <p className="text-xs text-nordic/60 mt-1">
                     {activeModal === "visit"
-                      ? "Select your preferred date & time to tour this property."
-                      : `Direct inquiry for ${propertyTitle}`}
+                      ? (dict?.visit_description || "Select your preferred date & time to tour this property.")
+                      : (dict?.inquiry_description || "Direct inquiry for {title}").replace("{title}", propertyTitle)}
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                    Full Name
+                    {dict?.full_name || "Full Name"}
                   </label>
                   <input
                     type="text"
@@ -122,7 +134,7 @@ export function ActionButtons({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                      Email
+                      {dict?.email || "Email"}
                     </label>
                     <input
                       type="email"
@@ -135,7 +147,7 @@ export function ActionButtons({
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                      Phone Number
+                      {dict?.phone || "Phone Number"}
                     </label>
                     <input
                       type="tel"
@@ -152,7 +164,7 @@ export function ActionButtons({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                        Tour Date
+                        {dict?.tour_date || "Tour Date"}
                       </label>
                       <input
                         type="date"
@@ -164,7 +176,7 @@ export function ActionButtons({
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                        Time Slot
+                        {dict?.time_slot || "Time Slot"}
                       </label>
                       <select
                         value={formData.time}
@@ -183,7 +195,7 @@ export function ActionButtons({
 
                 <div>
                   <label className="block text-xs font-semibold text-nordic/80 uppercase mb-1">
-                    Message
+                    {dict?.message || "Message"}
                   </label>
                   <textarea
                     rows={3}
@@ -197,7 +209,9 @@ export function ActionButtons({
                   type="submit"
                   className="w-full py-3.5 bg-mosque hover:bg-emerald-800 text-white font-semibold rounded-lg shadow-md transition-all cursor-pointer"
                 >
-                  {activeModal === "visit" ? "Confirm Visit Request" : "Send Inquiry"}
+                  {activeModal === "visit"
+                    ? (dict?.confirm_visit || "Confirm Visit Request")
+                    : (dict?.send_inquiry || "Send Inquiry")}
                 </button>
               </form>
             )}
