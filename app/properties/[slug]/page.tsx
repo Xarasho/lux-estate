@@ -50,8 +50,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: property.description,
       images: [
         {
-          url: property.imageUrl,
-          alt: property.imageAlt || property.title,
+          url: property.images?.[0]?.url || property.imageUrl || "",
+          alt: property.images?.[0]?.alt || property.imageAlt || property.title,
         },
       ],
     },
@@ -106,7 +106,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
     name: property.title,
     description: property.description,
     url: `https://luxeestate.com/properties/${property.slug || property.id}`,
-    image: property.images?.map((img) => img.url) || [property.imageUrl],
+    image: property.images?.map((img) => img.url) || [],
     offers: {
       "@type": "Offer",
       price: property.price,
@@ -143,7 +143,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           {/* Top Left: 1 to N Images Showcase & Gallery */}
           <div className="lg:col-span-8 space-y-4">
             <PropertyGallery
-              images={property.images || [{ url: property.imageUrl, alt: property.imageAlt }]}
+              images={property.images}
               title={property.title}
               badge={property.badge}
               type={property.type}

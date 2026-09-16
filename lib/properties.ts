@@ -26,9 +26,8 @@ interface DbProperty {
     sqm: number;
     garage?: number;
   };
-  image_url: string;
-  image_alt: string;
-  images?: PropertyImage[] | null;
+  image_alt?: string | null;
+  images: PropertyImage[];
   description?: string | null;
   amenities?: string[] | null;
   agent?: PropertyAgent | null;
@@ -37,18 +36,18 @@ interface DbProperty {
 }
 
 function toProperty(row: DbProperty): Property {
-  const defaultImages: PropertyImage[] = [
-    {
-      url: row.image_url,
-      alt: row.image_alt || row.title,
-      label: "Main Exterior",
-    },
-  ];
-
-  const images =
+  const images: PropertyImage[] =
     Array.isArray(row.images) && row.images.length > 0
       ? row.images
-      : defaultImages;
+      : [
+          {
+            url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+            alt: row.image_alt || row.title,
+            label: "Main Exterior",
+          },
+        ];
+
+  const primaryImage = images[0];
 
   return {
     id: row.id,
@@ -63,8 +62,8 @@ function toProperty(row: DbProperty): Property {
       ...row.features,
       garage: row.features?.garage ?? 2,
     },
-    imageUrl: row.image_url,
-    imageAlt: row.image_alt,
+    imageUrl: primaryImage?.url || "",
+    imageAlt: primaryImage?.alt || row.image_alt || row.title,
     images,
     description:
       row.description ||

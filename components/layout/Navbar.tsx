@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface NavbarProps {
   activeNav?: "buy" | "rent" | "sell" | "saved";
@@ -25,10 +26,15 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Brand Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-            <span className="material-symbols-outlined text-mosque text-3xl font-bold transition-transform group-hover:scale-110">
-              villa
-            </span>
+          <Link href="/" className="flex-shrink-0 flex items-center gap-2.5 cursor-pointer group">
+            <Image
+              src="/favicon.ico"
+              alt="LuxeEstate Logo"
+              width={32}
+              height={32}
+              className="w-8 h-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+              priority
+            />
             <span className="font-bold text-xl tracking-tight text-nordic-dark">
               LuxeEstate
             </span>

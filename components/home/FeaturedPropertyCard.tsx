@@ -33,8 +33,8 @@ export function FeaturedPropertyCard({
       <div className="aspect-[4/3] w-full overflow-hidden relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={property.imageUrl}
-          alt={property.imageAlt || property.title}
+          src={property.images?.[0]?.url || property.imageUrl || ""}
+          alt={property.images?.[0]?.alt || property.imageAlt || property.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 

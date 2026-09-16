@@ -41,9 +41,9 @@ export interface Property {
   category: PropertyCategory;
   location: PropertyLocation;
   features: PropertyFeatures;
-  imageUrl: string;
-  imageAlt: string;
-  images?: PropertyImage[];
+  images: PropertyImage[];
+  imageUrl?: string;
+  imageAlt?: string;
   description?: string;
   amenities?: string[];
   agent?: PropertyAgent;
