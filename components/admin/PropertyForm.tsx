@@ -27,7 +27,7 @@ const DEFAULT_AMENITIES = [
 
 export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
   const router = useRouter();
-  const { userName, avatarUrl } = useAuth();
+  const { user, userName, userEmail, avatarUrl, role, isAdmin } = useAuth();
   const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +50,43 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
   const [city, setCity] = useState(initialProperty?.location?.city || "");
   const [state, setState] = useState(initialProperty?.location?.state || "");
   const [country, setCountry] = useState(initialProperty?.location?.country || "");
+  const [lat, setLat] = useState<number | string>(
+    initialProperty?.location?.lat !== undefined ? initialProperty.location.lat : ""
+  );
+  const [lng, setLng] = useState<number | string>(
+    initialProperty?.location?.lng !== undefined ? initialProperty.location.lng : ""
+  );
+  const [isLocating, setIsLocating] = useState(false);
+  const [geoFeedback, setGeoFeedback] = useState<string | null>(null);
+
+  const handleDetectCoordinates = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setGeoFeedback("La geolocalización no está soportada en tu navegador.");
+      setTimeout(() => setGeoFeedback(null), 4000);
+      return;
+    }
+
+    setIsLocating(true);
+    setGeoFeedback("Obteniendo coordenadas GPS...");
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const detectedLat = parseFloat(pos.coords.latitude.toFixed(6));
+        const detectedLng = parseFloat(pos.coords.longitude.toFixed(6));
+        setLat(detectedLat);
+        setLng(detectedLng);
+        setIsLocating(false);
+        setGeoFeedback(`GPS detectado: ${detectedLat}, ${detectedLng}`);
+        setTimeout(() => setGeoFeedback(null), 4000);
+      },
+      (err) => {
+        setIsLocating(false);
+        setGeoFeedback(`Error GPS: ${err.message}`);
+        setTimeout(() => setGeoFeedback(null), 4000);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
 
   // Features
   const [beds, setBeds] = useState(initialProperty?.features?.beds ?? 3);
@@ -334,8 +371,8 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
         city: city.trim(),
         state: state.trim() || undefined,
         country: country.trim() || undefined,
-        lat: initialProperty?.location?.lat ?? 37.7749,
-        lng: initialProperty?.location?.lng ?? -122.4194,
+        lat: lat !== "" && !isNaN(Number(lat)) ? Number(lat) : undefined,
+        lng: lng !== "" && !isNaN(Number(lng)) ? Number(lng) : undefined,
       },
       features: {
         beds: Number(beds) || 0,
@@ -365,7 +402,17 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
         if (mode === "create") {
           const result = await createProperty(payload);
           if (result.error) {
-            setErrorMessage(result.error);
+            const isRls =
+              result.error.toLowerCase().includes("row-level security") ||
+              result.error.toLowerCase().includes("policy") ||
+              result.error.toLowerCase().includes("permission denied");
+            if (isRls) {
+              setErrorMessage(
+                "Error RLS de Supabase: Solo los usuarios con rol 'admin' autenticados tienen permisos para crear o modificar propiedades."
+              );
+            } else {
+              setErrorMessage(result.error);
+            }
             return;
           }
           setSuccessMessage("¡Propiedad creada exitosamente en Supabase!");
@@ -376,7 +423,17 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
         } else if (mode === "edit" && initialProperty?.id) {
           const result = await updateProperty(initialProperty.id, payload);
           if (result.error) {
-            setErrorMessage(result.error);
+            const isRls =
+              result.error.toLowerCase().includes("row-level security") ||
+              result.error.toLowerCase().includes("policy") ||
+              result.error.toLowerCase().includes("permission denied");
+            if (isRls) {
+              setErrorMessage(
+                "Error RLS de Supabase: Solo los usuarios con rol 'admin' autenticados tienen permisos para crear o modificar propiedades."
+              );
+            } else {
+              setErrorMessage(result.error);
+            }
             return;
           }
           setSuccessMessage("¡Propiedad actualizada exitosamente en Supabase!");
@@ -474,6 +531,41 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+        {/* Supabase RLS Admin Authorization Status Banner */}
+        {user && isAdmin ? (
+          <div className="mb-6 p-3 rounded-xl bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="font-medium">
+                Sesión de Administrador activa ({userEmail || userName})
+              </span>
+              <span className="text-emerald-600 hidden sm:inline">• Permisos de RLS concedidos para modificar propiedades</span>
+            </div>
+            <span className="text-[11px] font-semibold bg-emerald-600 text-white px-2 py-0.5 rounded uppercase tracking-wider">
+              RLS Admin
+            </span>
+          </div>
+        ) : (
+          <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-900 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <span className="material-icons text-amber-600 text-lg flex-shrink-0">security</span>
+              <div>
+                <p className="font-semibold">Atención con la seguridad RLS</p>
+                <p className="text-amber-800/90 text-[11px]">
+                  Para guardar o modificar propiedades en Supabase, debes tener una sesión activa con una cuenta con rol <strong>admin</strong>.
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/login?next=/admin/properties/${mode === "create" ? "new" : initialProperty?.id || ""}`}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs transition-colors shadow-xs whitespace-nowrap"
+            >
+              <span className="material-icons text-xs">login</span>
+              <span>Iniciar Sesión Admin</span>
+            </Link>
+          </div>
+        )}
+
         {/* Header with Breadcrumb */}
         <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-200 pb-8">
           <div className="space-y-3">
@@ -988,6 +1080,74 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
                   </div>
                 </div>
 
+                {/* Latitude & Longitude Coordinates */}
+                <div className="pt-3 border-t border-gray-100 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-nordic/80 font-sf-pro flex items-center gap-1.5">
+                      <span className="material-icons text-sm text-mosque">explore</span>
+                      <span>Coordenadas GPS</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleDetectCoordinates}
+                      disabled={isLocating}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-mosque hover:text-nordic transition-colors px-2.5 py-1 rounded-md bg-hint-green/40 hover:bg-hint-green/70 cursor-pointer disabled:opacity-50"
+                      title="Obtener coordenadas de tu ubicación actual mediante el GPS del dispositivo"
+                    >
+                      <span className={`material-icons text-xs ${isLocating ? "animate-spin" : ""}`}>
+                        {isLocating ? "refresh" : "my_location"}
+                      </span>
+                      <span>{isLocating ? "Detectando..." : "Detectar GPS"}</span>
+                    </button>
+                  </div>
+
+                  {geoFeedback && (
+                    <div className="text-xs text-mosque bg-hint-green/25 px-2.5 py-1.5 rounded-md flex items-center gap-1.5">
+                      <span className="material-icons text-xs">info</span>
+                      <span>{geoFeedback}</span>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-nordic mb-1 font-sf-pro" htmlFor="lat">
+                        Latitud
+                      </label>
+                      <div className="relative">
+                        <input
+                          id="lat"
+                          type="number"
+                          step="any"
+                          value={lat}
+                          onChange={(e) => setLat(e.target.value)}
+                          placeholder="e.g. 37.4419"
+                          className="w-full px-3 py-2 rounded-md border border-gray-200 bg-white text-nordic placeholder-gray-400 focus:ring-1 focus:ring-mosque focus:border-mosque transition-all text-sm font-sf-pro font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-nordic mb-1 font-sf-pro" htmlFor="lng">
+                        Longitud
+                      </label>
+                      <div className="relative">
+                        <input
+                          id="lng"
+                          type="number"
+                          step="any"
+                          value={lng}
+                          onChange={(e) => setLng(e.target.value)}
+                          placeholder="e.g. -122.1430"
+                          className="w-full px-3 py-2 rounded-md border border-gray-200 bg-white text-nordic placeholder-gray-400 focus:ring-1 focus:ring-mosque focus:border-mosque transition-all text-sm font-sf-pro font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-400 font-sf-pro">
+                    Posiciona con precisión el marcador en el mapa interactivo de la página pública.
+                  </p>
+                </div>
+
                 {/* Map Preview */}
                 <div className="relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 border border-gray-200 group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -996,11 +1156,21 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
                     alt="Map view of city streets"
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="bg-white/90 text-nordic px-3 py-1.5 rounded shadow-sm backdrop-blur-sm text-xs font-bold font-sf-pro flex items-center gap-1">
-                      <span className="material-icons text-sm text-mosque">map</span>
-                      <span>{city ? `${city}, ${address || "Location"}` : "Map Preview"}</span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-3 text-center">
+                    <span className="bg-white/95 text-nordic px-3 py-1.5 rounded-lg shadow-sm backdrop-blur-sm text-xs font-bold font-sf-pro flex items-center gap-1.5 mb-1.5">
+                      <span className="material-icons text-sm text-mosque">place</span>
+                      <span>{city ? `${city}${address ? `, ${address}` : ""}` : "Previsualización del Mapa"}</span>
                     </span>
+                    {lat !== "" && lng !== "" ? (
+                      <span className="bg-nordic/90 text-white px-2.5 py-0.5 rounded-md shadow-xs text-[11px] font-mono tracking-tight flex items-center gap-1">
+                        <span className="material-icons text-[11px] text-emerald-400">gps_fixed</span>
+                        <span>{Number(lat).toFixed(4)}, {Number(lng).toFixed(4)}</span>
+                      </span>
+                    ) : (
+                      <span className="bg-black/50 text-white/90 px-2 py-0.5 rounded text-[10px] font-sf-pro">
+                        Sin coordenadas GPS asignadas
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

@@ -587,8 +587,14 @@ export async function createProperty(
         city: data.location?.city || "",
         state: data.location?.state || undefined,
         country: data.location?.country || undefined,
-        lat: data.location?.lat,
-        lng: data.location?.lng,
+        lat:
+          data.location?.lat !== undefined && !isNaN(Number(data.location.lat))
+            ? Number(data.location.lat)
+            : undefined,
+        lng:
+          data.location?.lng !== undefined && !isNaN(Number(data.location.lng))
+            ? Number(data.location.lng)
+            : undefined,
       },
       features: {
         beds: Number(data.features?.beds) || 0,
@@ -650,7 +656,22 @@ export async function updateProperty(
       updatePayload.price_period = data.pricePeriod;
     }
     if (data.category !== undefined) updatePayload.category = data.category;
-    if (data.location !== undefined) updatePayload.location = data.location;
+    if (data.location !== undefined) {
+      updatePayload.location = {
+        address: data.location.address || "",
+        city: data.location.city || "",
+        state: data.location.state || undefined,
+        country: data.location.country || undefined,
+        lat:
+          data.location.lat !== undefined && !isNaN(Number(data.location.lat))
+            ? Number(data.location.lat)
+            : undefined,
+        lng:
+          data.location.lng !== undefined && !isNaN(Number(data.location.lng))
+            ? Number(data.location.lng)
+            : undefined,
+      };
+    }
     if (data.features !== undefined) {
       updatePayload.features = {
         beds: Number(data.features.beds) || 0,

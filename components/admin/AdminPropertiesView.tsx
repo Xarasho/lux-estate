@@ -336,8 +336,14 @@ export function AdminPropertiesView({ initialProperties }: AdminPropertiesViewPr
                 <h2 className="text-2xl font-bold text-nordic dark:text-white mt-1">
                   {previewProperty.title}
                 </h2>
-                <p className="text-xs text-nordic/60 dark:text-gray-400">
-                  {previewProperty.location?.address}, {previewProperty.location?.city}
+                <p className="text-xs text-nordic/60 dark:text-gray-400 flex items-center gap-2 flex-wrap mt-0.5">
+                  <span>{previewProperty.location?.address}, {previewProperty.location?.city}</span>
+                  {previewProperty.location?.lat !== undefined && previewProperty.location?.lng !== undefined && (
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                      <span className="material-icons text-[10px]">gps_fixed</span>
+                      {Number(previewProperty.location.lat).toFixed(4)}, {Number(previewProperty.location.lng).toFixed(4)}
+                    </span>
+                  )}
                 </p>
               </div>
               <button
