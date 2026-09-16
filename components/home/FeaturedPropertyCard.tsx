@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Property } from "@/types/property";
 import { HeartButton } from "@/components/ui/HeartButton";
 import { Badge } from "@/components/ui/Badge";
@@ -14,6 +15,7 @@ export function FeaturedPropertyCard({
   property,
   onSelect,
 }: FeaturedPropertyCardProps) {
+  const targetSlug = property.slug || property.id;
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -21,10 +23,12 @@ export function FeaturedPropertyCard({
   }).format(property.price);
 
   return (
-    <article
+    <Link
+      href={`/properties/${targetSlug}`}
       onClick={() => onSelect && onSelect(property)}
-      className="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer border border-nordic-dark/5 hover:border-hint-of-green transition-all duration-300 flex flex-col"
+      className="block text-inherit no-underline"
     >
+      <article className="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer border border-nordic-dark/5 hover:border-hint-of-green transition-all duration-300 flex flex-col h-full">
       {/* Media Container */}
       <div className="aspect-[4/3] w-full overflow-hidden relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,5 +93,6 @@ export function FeaturedPropertyCard({
         </div>
       </div>
     </article>
+  </Link>
   );
 }

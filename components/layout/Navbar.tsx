@@ -26,10 +26,10 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
         <div className="flex justify-between items-center h-20">
           {/* Brand Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-            <div className="w-8 h-8 rounded-lg bg-nordic-dark flex items-center justify-center transition-transform group-hover:scale-105">
-              <span className="material-icons text-white text-lg">apartment</span>
-            </div>
-            <span className="text-xl font-semibold tracking-tight text-nordic-dark">
+            <span className="material-symbols-outlined text-mosque text-3xl font-bold transition-transform group-hover:scale-110">
+              villa
+            </span>
+            <span className="font-bold text-xl tracking-tight text-nordic-dark">
               LuxeEstate
             </span>
           </Link>

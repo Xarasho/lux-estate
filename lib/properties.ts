@@ -1,35 +1,93 @@
 import { supabase } from "@/lib/supabase";
-import { Property } from "@/types/property";
+import { Property, PropertyImage, PropertyAgent } from "@/types/property";
+import { FEATURED_PROPERTIES, INITIAL_MARKET_PROPERTIES } from "@/data/mockProperties";
 
 export const PROPERTIES_PER_PAGE = 6;
 
 interface DbProperty {
   id: string;
+  slug?: string | null;
   title: string;
   price: number;
   price_period: string | null;
   type: "sale" | "rent";
   category: "house" | "apartment" | "villa" | "penthouse";
-  location: { address: string; city: string; state?: string; country?: string };
-  features: { beds: number; baths: number; sqm: number };
+  location: {
+    address: string;
+    city: string;
+    state?: string;
+    country?: string;
+    lat?: number;
+    lng?: number;
+  };
+  features: {
+    beds: number;
+    baths: number;
+    sqm: number;
+    garage?: number;
+  };
   image_url: string;
   image_alt: string;
+  images?: PropertyImage[] | null;
+  description?: string | null;
+  amenities?: string[] | null;
+  agent?: PropertyAgent | null;
   badge: string | null;
   is_featured: boolean;
 }
 
 function toProperty(row: DbProperty): Property {
+  const defaultImages: PropertyImage[] = [
+    {
+      url: row.image_url,
+      alt: row.image_alt || row.title,
+      label: "Main Exterior",
+    },
+  ];
+
+  const images =
+    Array.isArray(row.images) && row.images.length > 0
+      ? row.images
+      : defaultImages;
+
   return {
     id: row.id,
+    slug: row.slug || row.id,
     title: row.title,
     price: row.price,
     pricePeriod: (row.price_period as "month" | "year") ?? undefined,
     type: row.type,
     category: row.category,
     location: row.location,
-    features: row.features,
+    features: {
+      ...row.features,
+      garage: row.features?.garage ?? 2,
+    },
     imageUrl: row.image_url,
     imageAlt: row.image_alt,
+    images,
+    description:
+      row.description ||
+      "Discover unparalleled luxury living in this impeccably designed property. Featuring refined finishes, high ceilings, expansive open-concept living spaces, and floor-to-ceiling windows providing abundant natural light. The gourmet kitchen offers bespoke cabinetry and chef-grade appliances, while the primary suite serves as a serene private retreat.",
+    amenities:
+      Array.isArray(row.amenities) && row.amenities.length > 0
+        ? row.amenities
+        : [
+            "Smart Home System",
+            "Swimming Pool",
+            "Central Heating & Cooling",
+            "Electric Vehicle Charging",
+            "Private Gym",
+            "Wine Cellar",
+          ],
+    agent: row.agent ?? {
+      name: "Sarah Jenkins",
+      role: "Top Rated Agent",
+      photoUrl:
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuD4TxUmdQRb2VMjuaNxLEwLorv_dgHzoET2_wL5toSvew6nhtziaR3DX-U69DBN7J74yO6oKokpw8tqEFutJf13MeXghCy7FwZuAxnoJel6FYcKeCRUVinpZtrNnkZvXd-MY5_2MAtRD7JP5BieHixfCaeAPW04jm-y-nvF3HIrwcZ_HRDk_MrNP5WiPV3u9zNrEgM-SQoWGh4xLVSV444aZAbVl03mjjsW5WBpIeodCyqJxprTDp6Q157D06VxcdUSCf-l9UKQT-w",
+      phone: "+1 (555) 234-5678",
+      email: "sarah.jenkins@luxeestate.com",
+    },
     badge: row.badge ?? undefined,
     isFeatured: row.is_featured,
   };
@@ -94,7 +152,8 @@ export async function getProperties({
 
   if (error) {
     console.error("[getProperties] Supabase error:", error.message);
-    return { data: [], count: 0, totalPages: 0 };
+    const mockList = featuredOnly ? FEATURED_PROPERTIES : INITIAL_MARKET_PROPERTIES;
+    return { data: mockList, count: mockList.length, totalPages: 1 };
   }
 
   const properties = (data as DbProperty[]).map(toProperty);
@@ -103,3 +162,63 @@ export async function getProperties({
 
   return { data: properties, count: total, totalPages };
 }
+
+export async function getPropertyBySlug(slug: string): Promise<Property | null> {
+  if (!slug) return null;
+
+  try {
+    // Try matching by slug first, fallback to id
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .or(`slug.eq.${slug},id.eq.${slug}`)
+      .limit(1)
+      .maybeSingle();
+
+    if (!error && data) {
+      // Also check if there are relational property_images
+      const { data: imgData } = await supabase
+        .from("property_images")
+        .select("url, alt, label, display_order")
+        .eq("property_id", data.id)
+        .order("display_order", { ascending: true });
+
+      const prop = toProperty(data as DbProperty);
+      if (imgData && imgData.length > 0) {
+        prop.images = imgData.map((img) => ({
+          url: img.url,
+          alt: img.alt || prop.title,
+          label: img.label || undefined,
+        }));
+      }
+      return prop;
+    }
+  } catch (err) {
+    console.warn("[getPropertyBySlug] Error fetching from Supabase:", err);
+  }
+
+  // Graceful fallback to mock data
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  const found = allMocks.find((p) => p.slug === slug || p.id === slug);
+  return found || null;
+}
+
+export async function getAllPropertySlugs(): Promise<string[]> {
+  try {
+    const { data, error } = await supabase
+      .from("properties")
+      .select("slug, id");
+
+    if (!error && data && data.length > 0) {
+      return data
+        .map((p) => p.slug || p.id)
+        .filter((slug): slug is string => Boolean(slug));
+    }
+  } catch (err) {
+    console.warn("[getAllPropertySlugs] Error fetching slugs:", err);
+  }
+
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  return allMocks.map((p) => p.slug || p.id);
+}
+

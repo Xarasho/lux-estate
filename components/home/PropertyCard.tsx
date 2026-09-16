@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Property } from "@/types/property";
 import { HeartButton } from "@/components/ui/HeartButton";
 import { Badge } from "@/components/ui/Badge";
@@ -16,6 +17,7 @@ export function PropertyCard({
   onSelect,
   className = "",
 }: PropertyCardProps) {
+  const targetSlug = property.slug || property.id;
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -28,10 +30,12 @@ export function PropertyCard({
     property.badge || (property.type === "rent" ? "FOR RENT" : "FOR SALE");
 
   return (
-    <article
+    <Link
+      href={`/properties/${targetSlug}`}
       onClick={() => onSelect && onSelect(property)}
-      className={`bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col border border-nordic-dark/5 hover:border-nordic-dark/10 ${className}`}
+      className={`bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col border border-nordic-dark/5 hover:border-nordic-dark/10 block text-inherit no-underline ${className}`}
     >
+      <article className="flex flex-col h-full">
       {/* Media & Badges */}
       <div className="relative aspect-[4/3] overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -96,5 +100,6 @@ export function PropertyCard({
         </div>
       </div>
     </article>
+  </Link>
   );
 }
