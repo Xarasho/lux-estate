@@ -15,6 +15,7 @@ export interface PropertyFeatures {
   baths: number;
   sqm: number;
   garage?: number;
+  yearBuilt?: number;
 }
 
 export interface PropertyImage {

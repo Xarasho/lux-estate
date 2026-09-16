@@ -65,11 +65,19 @@ export function AdminPropertiesView({ initialProperties }: AdminPropertiesViewPr
 
         <div className="flex items-center gap-3">
           <Link
+            href="/admin/properties/new"
+            className="px-5 py-2.5 rounded-lg bg-mosque hover:bg-nordic text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 text-sm"
+          >
+            <span className="material-icons text-base">add_circle_outline</span>
+            <span>Nueva Propiedad</span>
+          </Link>
+
+          <Link
             href="/#listings"
-            className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow-md shadow-primary/20 transition-all inline-flex items-center gap-2"
+            className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-nordic dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2"
           >
             <span className="material-icons text-base">explore</span>
-            <span>Explorar en Catálogo</span>
+            <span>Catálogo</span>
           </Link>
         </div>
       </div>
@@ -283,23 +291,31 @@ export function AdminPropertiesView({ initialProperties }: AdminPropertiesViewPr
                 </div>
 
                 {/* Actions */}
-                <div className="col-span-12 md:col-span-2 flex items-center justify-end gap-2">
+                <div className="col-span-12 md:col-span-2 flex items-center justify-end gap-1.5">
+                  <Link
+                    href={`/admin/properties/${property.id}/edit`}
+                    className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-mosque hover:bg-hint-green/30 transition-all"
+                    title="Editar Propiedad"
+                  >
+                    <span className="material-icons text-lg">edit</span>
+                  </Link>
+
                   <button
                     type="button"
                     onClick={() => setPreviewProperty(property)}
-                    className="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all"
+                    className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all"
                     title="Vista Rápida"
                   >
-                    <span className="material-icons text-xl">visibility</span>
+                    <span className="material-icons text-lg">visibility</span>
                   </button>
 
                   <Link
                     href={`/propiedades/${property.slug || property.id}`}
                     target="_blank"
-                    className="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all"
+                    className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all"
                     title="Ver en Sitio Web"
                   >
-                    <span className="material-icons text-xl">open_in_new</span>
+                    <span className="material-icons text-lg">open_in_new</span>
                   </Link>
                 </div>
               </div>
@@ -409,11 +425,18 @@ export function AdminPropertiesView({ initialProperties }: AdminPropertiesViewPr
                 Cerrar
               </button>
               <Link
+                href={`/admin/properties/${previewProperty.id}/edit`}
+                className="px-4 py-2 text-xs font-medium rounded-lg bg-mosque text-white hover:bg-nordic inline-flex items-center gap-1.5 transition-colors"
+              >
+                <span className="material-icons text-sm">edit</span>
+                <span>Editar Propiedad</span>
+              </Link>
+              <Link
                 href={`/propiedades/${previewProperty.slug || previewProperty.id}`}
                 target="_blank"
                 className="px-4 py-2 text-xs font-medium rounded-lg bg-primary text-white hover:bg-primary/90 inline-flex items-center gap-1.5"
               >
-                <span>Ver Publicación Completa</span>
+                <span>Ver en Web</span>
                 <span className="material-icons text-sm">open_in_new</span>
               </Link>
             </div>

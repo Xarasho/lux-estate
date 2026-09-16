@@ -25,6 +25,7 @@ interface DbProperty {
     baths: number;
     sqm: number;
     garage?: number;
+    yearBuilt?: number;
   };
   image_alt?: string | null;
   images: PropertyImage[];
@@ -61,6 +62,7 @@ function toProperty(row: DbProperty): Property {
     features: {
       ...row.features,
       garage: row.features?.garage ?? 2,
+      yearBuilt: row.features?.yearBuilt,
     },
     imageUrl: primaryImage?.url || "",
     imageAlt: primaryImage?.alt || row.image_alt || row.title,
@@ -460,5 +462,262 @@ export async function getAdminProperties({
     properties: allMocks,
     total: allMocks.length,
   };
+}
+
+export async function getPropertyById(id: string): Promise<Property | null> {
+  if (!id) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .or(`id.eq.${id},slug.eq.${id}`)
+      .limit(1)
+      .maybeSingle();
+
+    if (!error && data) {
+      const { data: imgData } = await supabase
+        .from("property_images")
+        .select("url, alt, label, display_order")
+        .eq("property_id", data.id)
+        .order("display_order", { ascending: true });
+
+      const prop = toProperty(data as DbProperty);
+      if (imgData && imgData.length > 0) {
+        prop.images = imgData.map((img) => ({
+          url: img.url,
+          alt: img.alt || prop.title,
+          label: img.label || undefined,
+        }));
+      }
+      return prop;
+    }
+  } catch (err) {
+    console.warn("[getPropertyById] Error fetching from Supabase:", err);
+  }
+
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  return allMocks.find((p) => p.id === id || p.slug === id) || null;
+}
+
+export async function uploadPropertyImage(file: File): Promise<{ url: string; error?: string }> {
+  try {
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const cleanFileName = file.name
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[^a-zA-Z0-9]/g, "-")
+      .toLowerCase();
+    const uniquePath = `properties/${Date.now()}-${cleanFileName}-${Math.random().toString(36).substring(2, 7)}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("property-images")
+      .upload(uniquePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("[uploadPropertyImage] Supabase Storage upload error:", uploadError);
+      return { url: "", error: uploadError.message };
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("property-images")
+      .getPublicUrl(uniquePath);
+
+    return { url: publicUrlData.publicUrl };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error al subir la imagen";
+    console.error("[uploadPropertyImage] Exception:", err);
+    return { url: "", error: message };
+  }
+}
+
+export async function deletePropertyImage(url: string): Promise<void> {
+  try {
+    const bucketPrefix = "/storage/v1/object/public/property-images/";
+    const index = url.indexOf(bucketPrefix);
+    if (index !== -1) {
+      const filePath = decodeURIComponent(url.substring(index + bucketPrefix.length));
+      if (filePath) {
+        await supabase.storage.from("property-images").remove([filePath]);
+      }
+    }
+  } catch (err) {
+    console.warn("[deletePropertyImage] Failed to delete image:", err);
+  }
+}
+
+export async function createProperty(
+  data: Partial<Property>
+): Promise<{ data?: Property; error?: string }> {
+  try {
+    const baseSlug = (data.title || "property")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    
+    const uniqueSuffix = Math.random().toString(36).substring(2, 7);
+    const slug = data.slug || `${baseSlug}-${uniqueSuffix}`;
+    const id = data.id || slug;
+
+    const images: PropertyImage[] =
+      data.images && data.images.length > 0
+        ? data.images
+        : [
+            {
+              url: data.imageUrl || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+              alt: data.title || "Property",
+              label: "Main Exterior",
+            },
+          ];
+
+    const dbRow: DbProperty = {
+      id,
+      slug,
+      title: data.title || "Untitled Property",
+      price: Number(data.price) || 0,
+      price_period: data.type === "rent" ? data.pricePeriod || "month" : null,
+      type: data.type === "rent" ? "rent" : "sale",
+      category: data.category || "house",
+      location: {
+        address: data.location?.address || "",
+        city: data.location?.city || "",
+        state: data.location?.state || undefined,
+        country: data.location?.country || undefined,
+        lat: data.location?.lat,
+        lng: data.location?.lng,
+      },
+      features: {
+        beds: Number(data.features?.beds) || 0,
+        baths: Number(data.features?.baths) || 0,
+        sqm: Number(data.features?.sqm) || 0,
+        garage: Number(data.features?.garage) || 0,
+        yearBuilt: data.features?.yearBuilt ? Number(data.features.yearBuilt) : undefined,
+      },
+      images,
+      image_alt: images[0]?.alt || data.title || null,
+      badge: data.badge || (data.type === "rent" ? "FOR RENT" : "FOR SALE"),
+      is_featured: Boolean(data.isFeatured),
+      description: data.description || "",
+      amenities: data.amenities || [],
+      agent: data.agent || {
+        name: "Elena Fisher",
+        role: "Senior Agent",
+        photoUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAmzE14jvdSQ44MQaP8gzILgyZCMmx-euPq-VqTsyA6CaXAiSOXG6q5U6y8ZB2r9FD-8KZcIWy26I3fZ7nhTYrhuOyFQ0ZWUqK11Rr-TPcz9YafIvjcmFEKASnb_RHxJUhsLRjIPf5y9DGE5jLDQf7z_fgAmKilyPC4KxIW4Umx3OKqqVfhNd3L-qEW3wTsiG_DaiWsTsLoiRwtAU_32ZuWR0hx4yZNjYP4AnMsAt0SVdFRnFhIfItaKCukJUh6_Qf4KV1-dN6oKmU",
+        email: "elena.fisher@luxeestate.com",
+        phone: "+1 (555) 019-2834",
+      },
+    };
+
+    const { data: inserted, error } = await supabase
+      .from("properties")
+      .insert(dbRow)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("[createProperty] Supabase insert error:", error);
+      return { error: error.message };
+    }
+
+    return { data: toProperty(inserted as DbProperty) };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error inesperado al crear la propiedad";
+    console.error("[createProperty] Exception:", err);
+    return { error: message };
+  }
+}
+
+export async function updateProperty(
+  id: string,
+  data: Partial<Property>
+): Promise<{ data?: Property; error?: string }> {
+  try {
+    const images: PropertyImage[] | undefined = data.images;
+
+    const updatePayload: Partial<DbProperty> = {};
+
+    if (data.title !== undefined) updatePayload.title = data.title;
+    if (data.slug !== undefined) updatePayload.slug = data.slug;
+    if (data.price !== undefined) updatePayload.price = Number(data.price);
+    if (data.type !== undefined) {
+      updatePayload.type = data.type === "rent" ? "rent" : "sale";
+      updatePayload.price_period = data.type === "rent" ? data.pricePeriod || "month" : null;
+    } else if (data.pricePeriod !== undefined) {
+      updatePayload.price_period = data.pricePeriod;
+    }
+    if (data.category !== undefined) updatePayload.category = data.category;
+    if (data.location !== undefined) updatePayload.location = data.location;
+    if (data.features !== undefined) {
+      updatePayload.features = {
+        beds: Number(data.features.beds) || 0,
+        baths: Number(data.features.baths) || 0,
+        sqm: Number(data.features.sqm) || 0,
+        garage: Number(data.features.garage) || 0,
+        yearBuilt: data.features.yearBuilt ? Number(data.features.yearBuilt) : undefined,
+      };
+    }
+    if (images !== undefined) {
+      updatePayload.images = images;
+      if (images.length > 0) {
+        updatePayload.image_alt = images[0].alt || data.title || null;
+      }
+    }
+    if (data.badge !== undefined) updatePayload.badge = data.badge;
+    if (data.isFeatured !== undefined) updatePayload.is_featured = data.isFeatured;
+    if (data.description !== undefined) updatePayload.description = data.description;
+    if (data.amenities !== undefined) updatePayload.amenities = data.amenities;
+    if (data.agent !== undefined) updatePayload.agent = data.agent;
+
+    const { data: updated, error } = await supabase
+      .from("properties")
+      .update(updatePayload)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      // Also try matching by slug if id was slug
+      const { data: updatedBySlug, error: slugErr } = await supabase
+        .from("properties")
+        .update(updatePayload)
+        .eq("slug", id)
+        .select()
+        .single();
+
+      if (slugErr) {
+        console.error("[updateProperty] Supabase update error:", error);
+        return { error: error.message };
+      }
+      return { data: toProperty(updatedBySlug as DbProperty) };
+    }
+
+    return { data: toProperty(updated as DbProperty) };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error inesperado al actualizar la propiedad";
+    console.error("[updateProperty] Exception:", err);
+    return { error: message };
+  }
+}
+
+export async function deleteProperty(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from("properties")
+      .delete()
+      .or(`id.eq.${id},slug.eq.${id}`);
+
+    if (error) {
+      console.error("[deleteProperty] Supabase delete error:", error);
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error al eliminar la propiedad";
+    return { success: false, error: message };
+  }
 }
 
