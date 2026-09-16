@@ -11,7 +11,7 @@
   "home": {
     "title_start": "Trouvez votre",
     "title_highlight": "sanctuaire",
-    "placeholder": "Recherche par ville, quartier ou adresse...",
+    "placeholder": "Recherche par titre, ville, quartier ou adresse...",
     "search": "Rechercher",
     "active_filters": "Filtres Actifs:",
     "reset_filters": "Tout réinitialiser",

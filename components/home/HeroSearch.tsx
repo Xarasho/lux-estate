@@ -186,7 +186,7 @@ export function HeroSearch({
               onChange={handleInputChange}
               onFocus={() => setIsFocused(true)}
               onKeyDown={handleKeyDown}
-              placeholder={dict?.placeholder || "Search by city, neighborhood, or address..."}
+              placeholder={dict?.placeholder || "Search by title, city, neighborhood, or address..."}
               className="block w-full pl-12 pr-28 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-base sm:text-lg outline-none"
               autoComplete="off"
             />
@@ -264,15 +264,21 @@ export function HeroSearch({
                   })}
                 </ul>
               ) : (
-                <div className="p-6 text-center">
-                  <span className="material-icons text-3xl text-nordic-muted/50 mb-1 block">
-                    location_off
+                <div
+                  onClick={() => {
+                    setIsFocused(false);
+                    if (onSearchSubmit) onSearchSubmit(internalQuery);
+                  }}
+                  className="p-6 text-center cursor-pointer hover:bg-nordic-dark/[0.02] transition-colors"
+                >
+                  <span className="material-icons text-3xl text-mosque mb-1 block">
+                    search
                   </span>
                   <p className="text-sm font-medium text-nordic-dark">
-                    No locations match &quot;{internalQuery}&quot;
+                    {dict?.search || "Search"} &quot;{internalQuery}&quot;
                   </p>
                   <p className="text-xs text-nordic-muted mt-1">
-                    Press <kbd className="px-1.5 py-0.5 bg-nordic-dark/5 rounded text-[10px] font-semibold text-nordic-dark">Enter</kbd> to search anywhere in property titles & descriptions.
+                    Press <kbd className="px-1.5 py-0.5 bg-nordic-dark/5 rounded text-[10px] font-semibold text-nordic-dark">Enter</kbd> or click to search by property title.
                   </p>
                 </div>
               )}

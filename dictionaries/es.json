@@ -11,7 +11,7 @@
   "home": {
     "title_start": "Encuentra tu",
     "title_highlight": "refugio",
-    "placeholder": "Buscar por ciudad, barrio o dirección...",
+    "placeholder": "Buscar por título, ciudad, barrio o dirección...",
     "search": "Buscar",
     "active_filters": "Filtros Activos:",
     "reset_filters": "Restablecer todo",

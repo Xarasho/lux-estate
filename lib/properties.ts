@@ -184,12 +184,26 @@ export async function getProperties({
     query = query.eq("category", normalizedCategory);
   }
 
-  const effectiveSearch = search || location;
-  if (effectiveSearch && effectiveSearch.trim()) {
-    const term = effectiveSearch.trim();
-    // Search strictly by property location (city, address, state, country)
+  if (search && search.trim() && location && location.trim()) {
+    const cleanSearch = search.trim().replace(/,/g, " ");
+    const cleanLoc = location.trim().replace(/,/g, " ");
+    query = query
+      .or(
+        `title.ilike.%${cleanSearch}%,location->>city.ilike.%${cleanSearch}%,location->>address.ilike.%${cleanSearch}%,location->>state.ilike.%${cleanSearch}%,location->>country.ilike.%${cleanSearch}%`
+      )
+      .or(
+        `location->>city.ilike.%${cleanLoc}%,location->>address.ilike.%${cleanLoc}%,location->>state.ilike.%${cleanLoc}%,location->>country.ilike.%${cleanLoc}%`
+      );
+  } else if (search && search.trim()) {
+    const cleanTerm = search.trim().replace(/,/g, " ");
+    // Search by property title (partial or total, case-insensitive) or location
     query = query.or(
-      `location->>city.ilike.%${term}%,location->>address.ilike.%${term}%,location->>state.ilike.%${term}%,location->>country.ilike.%${term}%`
+      `title.ilike.%${cleanTerm}%,location->>city.ilike.%${cleanTerm}%,location->>address.ilike.%${cleanTerm}%,location->>state.ilike.%${cleanTerm}%,location->>country.ilike.%${cleanTerm}%`
+    );
+  } else if (location && location.trim()) {
+    const cleanTerm = location.trim().replace(/,/g, " ");
+    query = query.or(
+      `location->>city.ilike.%${cleanTerm}%,location->>address.ilike.%${cleanTerm}%,location->>state.ilike.%${cleanTerm}%,location->>country.ilike.%${cleanTerm}%`
     );
   }
 
@@ -241,14 +255,25 @@ export async function getProperties({
           : category.toLowerCase();
       mockList = mockList.filter((p) => p.category === normalizedCategory);
     }
-    if (effectiveSearch && effectiveSearch.trim()) {
-      const st = effectiveSearch.trim().toLowerCase();
+    if (search && search.trim()) {
+      const st = search.trim().toLowerCase();
       mockList = mockList.filter(
         (p) =>
+          (p.title && p.title.toLowerCase().includes(st)) ||
           (p.location.city && p.location.city.toLowerCase().includes(st)) ||
           (p.location.address && p.location.address.toLowerCase().includes(st)) ||
           (p.location.state && p.location.state.toLowerCase().includes(st)) ||
           (p.location.country && p.location.country.toLowerCase().includes(st))
+      );
+    }
+    if (location && location.trim()) {
+      const lt = location.trim().toLowerCase();
+      mockList = mockList.filter(
+        (p) =>
+          (p.location.city && p.location.city.toLowerCase().includes(lt)) ||
+          (p.location.address && p.location.address.toLowerCase().includes(lt)) ||
+          (p.location.state && p.location.state.toLowerCase().includes(lt)) ||
+          (p.location.country && p.location.country.toLowerCase().includes(lt))
       );
     }
     if (minPrice !== undefined && minPrice > 0) {
