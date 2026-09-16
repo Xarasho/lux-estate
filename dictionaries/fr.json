@@ -3,7 +3,10 @@
     "buy": "Acheter",
     "rent": "Louer",
     "sell": "Vendre",
-    "saved": "Maisons enregistrées"
+    "saved": "Maisons enregistrées",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "switch_account": "Changer de compte"
   },
   "home": {
     "title_start": "Trouvez votre",

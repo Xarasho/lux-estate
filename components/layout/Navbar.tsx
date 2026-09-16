@@ -133,12 +133,13 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
               {loading ? (
                 <div className="w-9 h-9 rounded-full bg-nordic-dark/10 animate-pulse" />
               ) : user ? (
-                <div>
+                <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => setProfileDropdownOpen((prev) => !prev)}
-                    className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent hover:ring-mosque focus:ring-mosque transition-all cursor-pointer flex items-center justify-center"
+                    className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent hover:ring-mosque focus:ring-mosque transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
                     aria-label="User profile menu"
+                    title={userName || userEmail || "User profile"}
                   >
                     {avatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -155,9 +156,19 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                     )}
                   </button>
 
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-nordic-dark/70 hover:text-red-600 hover:bg-red-50/80 px-2.5 py-1.5 rounded-lg border border-nordic-dark/10 hover:border-red-200 transition-all cursor-pointer"
+                    title={dict?.logout || "Sign Out"}
+                  >
+                    <span className="material-icons text-base">logout</span>
+                    <span>{dict?.logout || "Sign Out"}</span>
+                  </button>
+
                   {/* Dropdown Menu */}
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-64 bg-surface rounded-xl shadow-soft-hover border border-nordic-dark/10 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="absolute right-0 mt-3 top-full w-64 bg-surface rounded-xl shadow-soft-hover border border-nordic-dark/10 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                       <div className="px-4 py-3 border-b border-nordic-dark/10">
                         <p className="text-sm font-semibold text-nordic-dark truncate">
                           {userName || "Luxe User"}
@@ -182,7 +193,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                           <span className="material-icons text-base text-nordic-dark/60">
                             switch_account
                           </span>
-                          <span>Switch Account</span>
+                          <span>{dict?.switch_account || "Switch Account"}</span>
                         </Link>
                         <button
                           type="button"
@@ -190,7 +201,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                           className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                         >
                           <span className="material-icons text-base">logout</span>
-                          <span>Sign Out</span>
+                          <span>{dict?.logout || "Sign Out"}</span>
                         </button>
                       </div>
                     </div>
@@ -202,7 +213,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                   className="inline-flex items-center gap-1.5 bg-mosque hover:bg-primary-dark text-white text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition-all shadow-sm hover:shadow-soft-hover"
                 >
                   <span className="material-icons text-base">login</span>
-                  <span>Sign In</span>
+                  <span>{dict?.login || "Sign In"}</span>
                 </Link>
               )}
             </div>
@@ -306,7 +317,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-red-600 bg-red-50 font-medium hover:bg-red-100 transition-colors"
               >
                 <span className="material-icons text-base">logout</span>
-                <span>Sign Out</span>
+                <span>{dict?.logout || "Sign Out"}</span>
               </button>
             </div>
           ) : (
@@ -316,7 +327,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
               className="w-full flex items-center justify-center gap-2 bg-mosque text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
             >
               <span className="material-icons text-base">login</span>
-              <span>Sign In with Google / GitHub</span>
+              <span>{dict?.login || "Sign In"}</span>
             </Link>
           )}
         </div>

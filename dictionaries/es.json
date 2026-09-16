@@ -3,7 +3,10 @@
     "buy": "Comprar",
     "rent": "Alquilar",
     "sell": "Vender",
-    "saved": "Guardados"
+    "saved": "Guardados",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "switch_account": "Cambiar Cuenta"
   },
   "home": {
     "title_start": "Encuentra tu",
