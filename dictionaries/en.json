@@ -1,0 +1,20 @@
+{
+  "navbar": {
+    "buy": "Buy",
+    "rent": "Rent",
+    "sell": "Sell",
+    "saved": "Saved Homes"
+  },
+  "home": {
+    "title_start": "Find your",
+    "title_highlight": "sanctuary",
+    "placeholder": "Search by city, neighborhood, or address...",
+    "search": "Search",
+    "active_filters": "Active Filters:"
+  },
+  "language": {
+    "es": "Spanish",
+    "en": "English",
+    "fr": "French"
+  }
+}

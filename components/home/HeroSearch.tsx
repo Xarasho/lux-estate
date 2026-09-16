@@ -12,6 +12,7 @@ export interface HeroSearchProps {
   onToggleFilters?: () => void;
   activeFiltersCount?: number;
   availableLocations?: LocationSuggestion[];
+  dict?: any;
 }
 
 const CATEGORIES: { label: string; value: string }[] = [
@@ -31,6 +32,7 @@ export function HeroSearch({
   onToggleFilters,
   activeFiltersCount = 0,
   availableLocations = [],
+  dict,
 }: HeroSearchProps) {
   const [internalQuery, setInternalQuery] = useState(searchQuery);
   const [isFocused, setIsFocused] = useState(false);
@@ -161,9 +163,9 @@ export function HeroSearch({
       <div className="max-w-3xl mx-auto text-center space-y-8">
         {/* Title */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-nordic-dark leading-tight tracking-tight">
-          Find your{" "}
+          {dict?.title_start || "Find your"}{" "}
           <span className="relative inline-block">
-            <span className="relative z-10 font-medium">sanctuary</span>
+            <span className="relative z-10 font-medium">{dict?.title_highlight || "sanctuary"}</span>
             <span className="absolute bottom-2 left-0 w-full h-3 bg-mosque/20 -rotate-1 z-0 rounded-sm"></span>
           </span>
           .
@@ -184,7 +186,7 @@ export function HeroSearch({
               onChange={handleInputChange}
               onFocus={() => setIsFocused(true)}
               onKeyDown={handleKeyDown}
-              placeholder="Search by city, neighborhood, or address..."
+              placeholder={dict?.placeholder || "Search by city, neighborhood, or address..."}
               className="block w-full pl-12 pr-28 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-muted/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-base sm:text-lg outline-none"
               autoComplete="off"
             />
@@ -207,7 +209,7 @@ export function HeroSearch({
               type="submit"
               className="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20 cursor-pointer"
             >
-              Search
+              {dict?.search || "Search"}
             </button>
           </form>
 

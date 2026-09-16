@@ -1,0 +1,20 @@
+{
+  "navbar": {
+    "buy": "Acheter",
+    "rent": "Louer",
+    "sell": "Vendre",
+    "saved": "Maisons enregistrées"
+  },
+  "home": {
+    "title_start": "Trouvez votre",
+    "title_highlight": "sanctuaire",
+    "placeholder": "Recherche par ville, quartier ou adresse...",
+    "search": "Recherche",
+    "active_filters": "Filtres Actifs:"
+  },
+  "language": {
+    "es": "Espagnol",
+    "en": "Anglais",
+    "fr": "Français"
+  }
+}

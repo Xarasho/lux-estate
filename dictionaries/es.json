@@ -1,0 +1,20 @@
+{
+  "navbar": {
+    "buy": "Comprar",
+    "rent": "Alquilar",
+    "sell": "Vender",
+    "saved": "Guardados"
+  },
+  "home": {
+    "title_start": "Encuentra tu",
+    "title_highlight": "refugio",
+    "placeholder": "Buscar por ciudad, barrio o dirección...",
+    "search": "Buscar",
+    "active_filters": "Filtros Activos:"
+  },
+  "language": {
+    "es": "Español",
+    "en": "Inglés",
+    "fr": "Francés"
+  }
+}

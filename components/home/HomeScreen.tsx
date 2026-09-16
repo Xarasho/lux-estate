@@ -25,6 +25,7 @@ export interface HomeScreenProps {
   activeBaths?: number;
   activeAmenities?: string[];
   availableLocations?: LocationSuggestion[];
+  dict?: any; // Simple type for dictionary
 }
 
 export function HomeScreen({
@@ -42,6 +43,7 @@ export function HomeScreen({
   activeBaths,
   activeAmenities = [],
   availableLocations = [],
+  dict,
 }: HomeScreenProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -214,7 +216,7 @@ export function HomeScreen({
   return (
     <div className="min-h-screen bg-background-light text-nordic-dark flex flex-col font-sans">
       {/* Top Navigation */}
-      <Navbar activeNav={activeNav} onNavSelect={handleNavSelect} />
+      <Navbar activeNav={activeNav} onNavSelect={handleNavSelect} dict={dict?.navbar} />
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full flex-grow">
@@ -228,13 +230,14 @@ export function HomeScreen({
           onToggleFilters={() => setIsFilterModalOpen(true)}
           activeFiltersCount={activeFiltersCount}
           availableLocations={availableLocations}
+          dict={dict?.home}
         />
 
         {/* Active Filters Summary Bar (if any filters applied) */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-2 mb-8 -mt-2 animate-fade-in">
             <span className="text-xs font-semibold uppercase tracking-wider text-nordic-muted mr-1">
-              Active Filters:
+              {dict?.home?.active_filters || "Active Filters:"}
             </span>
             {activeCategory && activeCategory !== "all" && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-nordic-dark/10 rounded-full text-xs font-medium text-nordic-dark capitalize shadow-xs">

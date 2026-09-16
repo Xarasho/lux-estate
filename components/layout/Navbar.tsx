@@ -4,12 +4,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { LanguageSwitcher } from "./LanguageSwitcher";
+
 export interface NavbarProps {
   activeNav?: "buy" | "rent" | "sell" | "saved";
   onNavSelect?: (tab: "buy" | "rent" | "sell" | "saved") => void;
+  dict?: Record<string, string>;
 }
 
-export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
+export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(activeNav);
 
@@ -50,7 +53,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                   : "text-nordic-dark/70 hover:text-nordic-dark hover:border-b-2 hover:border-nordic-dark/20"
               }`}
             >
-              Buy
+              {dict?.buy || "Buy"}
             </button>
             <button
               onClick={() => handleTabClick("rent")}
@@ -60,7 +63,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                   : "text-nordic-dark/70 hover:text-nordic-dark hover:border-b-2 hover:border-nordic-dark/20"
               }`}
             >
-              Rent
+              {dict?.rent || "Rent"}
             </button>
             <button
               onClick={() => handleTabClick("sell")}
@@ -70,7 +73,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                   : "text-nordic-dark/70 hover:text-nordic-dark hover:border-b-2 hover:border-nordic-dark/20"
               }`}
             >
-              Sell
+              {dict?.sell || "Sell"}
             </button>
             <button
               onClick={() => handleTabClick("saved")}
@@ -80,12 +83,13 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                   : "text-nordic-dark/70 hover:text-nordic-dark hover:border-b-2 hover:border-nordic-dark/20"
               }`}
             >
-              Saved Homes
+              {dict?.saved || "Saved Homes"}
             </button>
           </div>
 
           {/* Right Action Icons & Profile */}
           <div className="flex items-center space-x-4 sm:space-x-6">
+            <LanguageSwitcher />
             <button
               aria-label="Search"
               className="text-nordic-dark hover:text-mosque transition-colors p-1"
@@ -140,7 +144,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                 : "text-nordic-dark hover:bg-black/5"
             }`}
           >
-            Buy
+            {dict?.buy || "Buy"}
           </button>
           <button
             onClick={() => handleTabClick("rent")}
@@ -150,7 +154,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                 : "text-nordic-dark hover:bg-black/5"
             }`}
           >
-            Rent
+            {dict?.rent || "Rent"}
           </button>
           <button
             onClick={() => handleTabClick("sell")}
@@ -160,7 +164,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                 : "text-nordic-dark hover:bg-black/5"
             }`}
           >
-            Sell
+            {dict?.sell || "Sell"}
           </button>
           <button
             onClick={() => handleTabClick("saved")}
@@ -170,7 +174,7 @@ export function Navbar({ activeNav = "buy", onNavSelect }: NavbarProps) {
                 : "text-nordic-dark hover:bg-black/5"
             }`}
           >
-            Saved Homes
+            {dict?.saved || "Saved Homes"}
           </button>
         </div>
       </div>

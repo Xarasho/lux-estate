@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { HomeScreen } from "@/components/home/HomeScreen";
 import { getProperties, getAvailableLocations, PROPERTIES_PER_PAGE } from "@/lib/properties";
+import { getDictionary } from "@/lib/dictionary";
 
 export default async function Page({
   searchParams,
@@ -36,7 +37,7 @@ export default async function Page({
   );
   const shouldShowFeatured = !isAnyChipClicked && !hasSearchText;
 
-  const [featuredResult, marketResult, availableLocations] = await Promise.all([
+  const [featuredResult, marketResult, availableLocations, dict] = await Promise.all([
     shouldShowFeatured
       ? getProperties({ featuredOnly: true, pageSize: 2 })
       : Promise.resolve({ data: [], count: 0, totalPages: 0 }),
@@ -55,6 +56,7 @@ export default async function Page({
       featuredOnly: false,
     }),
     getAvailableLocations(),
+    getDictionary(),
   ]);
 
   return (
@@ -74,6 +76,7 @@ export default async function Page({
         activeBaths={baths}
         activeAmenities={amenities}
         availableLocations={availableLocations}
+        dict={dict}
       />
     </Suspense>
   );
