@@ -50,5 +50,6 @@ export interface Property {
   agent?: PropertyAgent;
   badge?: string;
   isFeatured?: boolean;
+  isActive?: boolean;
 }
 

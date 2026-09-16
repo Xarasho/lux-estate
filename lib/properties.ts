@@ -34,6 +34,7 @@ interface DbProperty {
   agent?: PropertyAgent | null;
   badge: string | null;
   is_featured: boolean;
+  is_active?: boolean;
 }
 
 function toProperty(row: DbProperty): Property {
@@ -91,6 +92,7 @@ function toProperty(row: DbProperty): Property {
     },
     badge: row.badge ?? undefined,
     isFeatured: row.is_featured,
+    isActive: row.is_active ?? true,
   };
 }
 
@@ -157,6 +159,7 @@ export async function getProperties({
   let query = supabase
     .from("properties")
     .select("*", { count: "exact" })
+    .eq("is_active", true)
     .order("created_at", { ascending: false });
 
   if (featuredOnly) {
@@ -223,6 +226,8 @@ export async function getProperties({
       : isFiltered
       ? [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES]
       : INITIAL_MARKET_PROPERTIES;
+
+    mockList = mockList.filter((p) => p.isActive !== false);
 
     if (type && type !== "all") {
       mockList = mockList.filter((p) => p.type === type);
@@ -326,7 +331,8 @@ export async function getAllPropertySlugs(): Promise<string[]> {
   try {
     const { data, error } = await supabase
       .from("properties")
-      .select("slug, id");
+      .select("slug, id")
+      .eq("is_active", true);
 
     if (!error && data && data.length > 0) {
       return data
@@ -337,7 +343,9 @@ export async function getAllPropertySlugs(): Promise<string[]> {
     console.warn("[getAllPropertySlugs] Error fetching slugs:", err);
   }
 
-  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES].filter(
+    (p) => p.isActive !== false
+  );
   return allMocks.map((p) => p.slug || p.id);
 }
 
@@ -345,7 +353,8 @@ export async function getAvailableLocations(): Promise<LocationSuggestion[]> {
   try {
     const { data, error } = await supabase
       .from("properties")
-      .select("location");
+      .select("location")
+      .eq("is_active", true);
 
     if (!error && data && data.length > 0) {
       const cityMap = new Map<string, LocationSuggestion>();
@@ -390,7 +399,9 @@ export async function getAvailableLocations(): Promise<LocationSuggestion[]> {
   }
 
   // Graceful fallback to mock data
-  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES].filter(
+    (p) => p.isActive !== false
+  );
   const cityMap = new Map<string, LocationSuggestion>();
   for (const p of allMocks) {
     if (!p.location || !p.location.city) continue;
@@ -418,10 +429,12 @@ export async function getAdminProperties({
   search = "",
   category = "all",
   type = "all",
+  status = "all",
 }: {
   search?: string;
   category?: string;
   type?: string;
+  status?: "all" | "active" | "inactive";
 } = {}): Promise<{ properties: Property[]; total: number }> {
   try {
     let query = supabase
@@ -435,6 +448,12 @@ export async function getAdminProperties({
 
     if (category && category !== "all") {
       query = query.eq("category", category);
+    }
+
+    if (status === "active") {
+      query = query.eq("is_active", true);
+    } else if (status === "inactive") {
+      query = query.eq("is_active", false);
     }
 
     if (search && search.trim()) {
@@ -607,6 +626,7 @@ export async function createProperty(
       image_alt: images[0]?.alt || data.title || null,
       badge: data.badge || (data.type === "rent" ? "FOR RENT" : "FOR SALE"),
       is_featured: Boolean(data.isFeatured),
+      is_active: data.isActive !== undefined ? Boolean(data.isActive) : true,
       description: data.description || "",
       amenities: data.amenities || [],
       agent: data.agent || {
@@ -689,6 +709,7 @@ export async function updateProperty(
     }
     if (data.badge !== undefined) updatePayload.badge = data.badge;
     if (data.isFeatured !== undefined) updatePayload.is_featured = data.isFeatured;
+    if (data.isActive !== undefined) updatePayload.is_active = data.isActive;
     if (data.description !== undefined) updatePayload.description = data.description;
     if (data.amenities !== undefined) updatePayload.amenities = data.amenities;
     if (data.agent !== undefined) updatePayload.agent = data.agent;
@@ -724,21 +745,51 @@ export async function updateProperty(
   }
 }
 
-export async function deleteProperty(id: string): Promise<{ success: boolean; error?: string }> {
+export async function deactivateProperty(id: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { error } = await supabase
       .from("properties")
-      .delete()
+      .update({ is_active: false })
       .or(`id.eq.${id},slug.eq.${id}`);
 
     if (error) {
-      console.error("[deleteProperty] Supabase delete error:", error);
+      console.error("[deactivateProperty] Supabase update error:", error);
       return { success: false, error: error.message };
     }
     return { success: true };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Error al eliminar la propiedad";
+    const message = err instanceof Error ? err.message : "Error al desactivar la propiedad";
     return { success: false, error: message };
   }
+}
+
+export async function reactivateProperty(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from("properties")
+      .update({ is_active: true })
+      .or(`id.eq.${id},slug.eq.${id}`);
+
+    if (error) {
+      console.error("[reactivateProperty] Supabase update error:", error);
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error al activar la propiedad";
+    return { success: false, error: message };
+  }
+}
+
+export async function togglePropertyActive(
+  id: string,
+  isActive: boolean
+): Promise<{ success: boolean; error?: string }> {
+  return isActive ? reactivateProperty(id) : deactivateProperty(id);
+}
+
+// Instead of physical delete, deactivate property to preserve history in DB
+export async function deleteProperty(id: string): Promise<{ success: boolean; error?: string }> {
+  return deactivateProperty(id);
 }
 

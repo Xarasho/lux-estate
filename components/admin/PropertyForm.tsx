@@ -45,6 +45,9 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
   );
   const [badge, setBadge] = useState(initialProperty?.badge || "");
   const [isFeatured, setIsFeatured] = useState<boolean>(initialProperty?.isFeatured || false);
+  const [isActive, setIsActive] = useState<boolean>(
+    initialProperty?.isActive !== undefined ? initialProperty.isActive : true
+  );
 
   // Location
   const [address, setAddress] = useState(initialProperty?.location?.address || "");
@@ -367,6 +370,7 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
       category,
       badge: badge.trim() || (type === "rent" ? "FOR RENT" : "FOR SALE"),
       isFeatured,
+      isActive,
       location: {
         address: address.trim(),
         city: city.trim(),
@@ -764,6 +768,38 @@ export function PropertyForm({ initialProperty, mode }: PropertyFormProps) {
                       />
                       <span className="text-sm font-semibold text-nordic font-sf-pro">
                         Destacar Propiedad (Featured)
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Publication Status (Active / Inactive) */}
+                <div className="pt-4 border-t border-gray-100 mt-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-gray-200 bg-gray-50/60 dark:bg-gray-800/30 gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-2.5 h-2.5 rounded-full ${isActive ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                        <h4 className="text-sm font-bold text-nordic dark:text-white font-sf-pro">
+                          Estado de Publicación: {isActive ? "Activa (Visible)" : "Desactivada (Oculta)"}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-sf-pro">
+                        {isActive
+                          ? "La propiedad aparece en el catálogo público, HomeScreen y en los filtros de búsqueda."
+                          : "La propiedad está desactivada. No aparecerá en HomeScreen ni en búsquedas públicas, pero permanecerá en el panel administrativo."}
+                      </p>
+                    </div>
+
+                    <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={(e) => setIsActive(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-mosque"></div>
+                      <span className="ml-3 text-xs font-semibold text-nordic dark:text-gray-200 font-sf-pro">
+                        {isActive ? "Activa" : "Desactivada"}
                       </span>
                     </label>
                   </div>
