@@ -19,7 +19,7 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const { user, loading, avatarUrl, userName, userEmail, provider, signOut } = useAuth();
+  const { user, loading, avatarUrl, userName, userEmail, provider, isAdmin, signOut } = useAuth();
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -109,6 +109,15 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
             >
               {dict?.saved || "Saved Homes"}
             </button>
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all shadow-xs border border-primary/20"
+              >
+                <span className="material-icons text-sm">admin_panel_settings</span>
+                <span>Admin</span>
+              </Link>
+            )}
           </div>
 
           {/* Right Action Icons & Profile */}
@@ -185,6 +194,18 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
                       </div>
 
                       <div className="py-1">
+                        {isAdmin && (
+                          <Link
+                            href="/admin"
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-primary bg-primary/5 hover:bg-primary/10 border-b border-nordic-dark/5 transition-colors"
+                          >
+                            <span className="material-icons text-base text-primary">
+                              admin_panel_settings
+                            </span>
+                            <span>Panel Administrativo</span>
+                          </Link>
+                        )}
                         <Link
                           href="/login"
                           onClick={() => setProfileDropdownOpen(false)}
@@ -280,6 +301,16 @@ export function Navbar({ activeNav = "buy", onNavSelect, dict }: NavbarProps) {
           >
             {dict?.saved || "Saved Homes"}
           </button>
+          {isAdmin && (
+            <Link
+              href="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 rounded-md text-base font-semibold text-primary bg-primary/10"
+            >
+              <span className="material-icons text-lg">admin_panel_settings</span>
+              <span>Panel Administrativo</span>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Auth Area */}

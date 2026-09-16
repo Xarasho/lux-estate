@@ -61,6 +61,14 @@ export default async function Page({
 
   return (
     <Suspense>
+      {params.error === "unauthorized" && (
+        <div className="bg-amber-50 border-b border-amber-200 text-amber-900 px-4 py-3 text-center text-xs sm:text-sm font-medium flex items-center justify-center gap-2">
+          <span className="material-icons text-base text-amber-600">gpp_maybe</span>
+          <span>
+            Acceso restringido: Se requieren permisos de Administrador para ingresar al panel administrativo.
+          </span>
+        </div>
+      )}
       <HomeScreen
         featuredProperties={featuredResult.data}
         marketProperties={marketResult.data}

@@ -412,3 +412,53 @@ export async function getAvailableLocations(): Promise<LocationSuggestion[]> {
   return Array.from(cityMap.values()).sort((a, b) => b.count - a.count);
 }
 
+export async function getAdminProperties({
+  search = "",
+  category = "all",
+  type = "all",
+}: {
+  search?: string;
+  category?: string;
+  type?: string;
+} = {}): Promise<{ properties: Property[]; total: number }> {
+  try {
+    let query = supabase
+      .from("properties")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false });
+
+    if (type && type !== "all") {
+      query = query.eq("type", type);
+    }
+
+    if (category && category !== "all") {
+      query = query.eq("category", category);
+    }
+
+    if (search && search.trim()) {
+      const term = search.trim();
+      query = query.or(
+        `title.ilike.%${term}%,location->>city.ilike.%${term}%,location->>address.ilike.%${term}%`
+      );
+    }
+
+    const { data, error, count } = await query;
+
+    if (!error && data) {
+      return {
+        properties: data.map((row: DbProperty) => toProperty(row)),
+        total: count || data.length,
+      };
+    }
+  } catch (err) {
+    console.error("[getAdminProperties] Exception:", err);
+  }
+
+  // Fallback to mock properties if database query fails
+  const allMocks = [...FEATURED_PROPERTIES, ...INITIAL_MARKET_PROPERTIES];
+  return {
+    properties: allMocks,
+    total: allMocks.length,
+  };
+}
+
